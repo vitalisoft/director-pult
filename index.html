@@ -54,11 +54,6 @@ section, header, footer { padding-top: 40px; padding-bottom: 40px; }
 }
 .btn:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
 .btn:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-.btn-ghost {
-  background: transparent;
-  color: var(--accent);
-}
-.btn-ghost:hover { background: var(--bg-soft); color: var(--accent-dark); }
 .card {
   background: var(--bg-soft);
   border: 1px solid var(--line);
@@ -115,7 +110,6 @@ section, header, footer { padding-top: 40px; padding-bottom: 40px; }
 footer p { margin: 0; }
 footer { color: var(--muted); font-size: .9rem; border-top: 1px solid var(--line); }
 @media (min-width: 720px) {
-  h1 { font-size: 2.75rem; }
   h2 { font-size: 1.9rem; }
   section, header, footer { padding-top: 64px; padding-bottom: 64px; }
 }
@@ -128,6 +122,7 @@ footer { color: var(--muted); font-size: .9rem; border-top: 1px solid var(--line
     <p class="lead">Пульт директора: для директора малого и среднего бизнеса</p>
     <a class="btn" id="tg" href="#">Написать в Telegram</a>
     <p class="hint">Напишите название компании и какие цифры вы собираете вручную</p>
+    <p class="phone">Telegram: <span id="nick">@ваш_ник</span></p>
     <p class="phone">Или позвоните: <span id="phone">+375 XX XXX-XX-XX</span></p>
     <p class="note">(замените на свой ник и номер)</p>
   </div></header>
@@ -198,6 +193,8 @@ footer { color: var(--muted); font-size: .9rem; border-top: 1px solid var(--line
     <h2>Обсудим вашу компанию</h2>
     <p class="lead">Напишите в Telegram: расскажете, как у вас устроен учёт, и мы обсудим, как это будет выглядеть в вашей компании.</p>
     <a class="btn" id="tg2" href="#">Написать в Telegram</a>
+    <p class="hint">Напишите название компании и какие цифры вы собираете вручную</p>
+    <p class="hint">Telegram: <span class="phone">@ваш_ник</span></p>
     <p class="hint">Или позвоните: <span class="phone">+375 XX XXX-XX-XX</span></p>
     <p class="note">(замените на свой ник и номер)</p>
   </div></section>
