@@ -105,6 +105,14 @@ section, header, footer { padding-top: 40px; padding-bottom: 40px; }
 @media (min-width: 720px) {
   .compare, .grid { grid-template-columns: 1fr 1fr; }
 }
+#contact h2 { margin-bottom: .5em; }
+#contact .lead { color: var(--muted); }
+#contact .btn { display: block; width: 100%; }
+#contact .hint { margin: 12px 0 0; color: var(--muted); font-size: .95rem; }
+#contact .phone { font-weight: 600; color: var(--text); }
+#contact .note { margin: 0; color: var(--muted); font-size: .85rem; }
+@media (min-width: 720px) { #contact .btn { display: inline-block; width: auto; } }
+footer p { margin: 0; }
 footer { color: var(--muted); font-size: .9rem; border-top: 1px solid var(--line); }
 @media (min-width: 720px) {
   h1 { font-size: 2.75rem; }
@@ -186,8 +194,16 @@ footer { color: var(--muted); font-size: .9rem; border-top: 1px solid var(--line
       <li>Работа только внутри сети компании будет доступна по желанию.</li>
     </ul>
   </div></section>
-  <section id="contact"><div class="wrap"></div></section>
+  <section id="contact"><div class="wrap">
+    <h2>Обсудим вашу компанию</h2>
+    <p class="lead">Напишите в Telegram: расскажете, как у вас устроен учёт, и мы покажем, как это будет выглядеть в вашей компании.</p>
+    <a class="btn" id="tg2" href="#">Написать в Telegram</a>
+    <p class="hint">Или позвоните: <span class="phone">+375 XX XXX-XX-XX</span></p>
+    <p class="note">(замените на свой ник и номер)</p>
+  </div></section>
 </main>
-<footer><div class="wrap"></div></footer>
+<footer><div class="wrap">
+  <p>Пульт директора — рабочее название</p>
+</div></footer>
 </body>
 </html>
