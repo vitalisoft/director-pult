@@ -202,20 +202,34 @@ a:focus-visible { outline: var(--focus-width) solid var(--c-accent); outline-off
 .ticks--muted li::before { background: var(--c-surface); border: 1px solid var(--c-border-strong); }
 .ticks--muted li::after { left: 6px; top: calc(.1em + 10px); width: 10px; height: 0; border-width: 2px 0 0; border-color: var(--c-muted); transform: none; }
 
-/* Рамка макета: как окно иллюстрации первого экрана */
-.mockup-stage { position: relative; }
-.mockup-stage::before { content: ""; position: absolute; right: -6%; top: -40px; width: 38%; aspect-ratio: 1; border-radius: 50%; background: var(--c-accent-200); opacity: .55; }
-.mockup-stage::after { content: ""; position: absolute; left: -4%; bottom: -30px; width: 18%; aspect-ratio: 1; border-radius: 50%; background: var(--c-accent-100); }
-.mockup {
+/* Рамка телефона: корпус рисуется только CSS, экран внутри - макет приложения */
+.preview-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-6); align-items: center; }
+.preview-points h3 { font-size: var(--fs-h3); line-height: var(--lh-snug); margin: 0 0 var(--sp-4); }
+.preview-points .ticks li { font-size: var(--fs-base); }
+@media (min-width: 960px) { .preview-grid { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: var(--sp-7); } }
+.mockup-stage { position: relative; width: 100%; max-width: 360px; margin: 0 auto; }
+.mockup-stage::before { content: ""; position: absolute; right: -14%; top: -40px; width: 38%; aspect-ratio: 1; border-radius: 50%; background: var(--c-accent-200); opacity: .55; }
+.mockup-stage::after { content: ""; position: absolute; left: -10%; bottom: -30px; width: 22%; aspect-ratio: 1; border-radius: 50%; background: var(--c-accent-100); }
+.phone {
   position: relative;
   z-index: 1;
-  background: var(--c-surface);
-  border: 1px solid var(--c-border);
-  border-radius: var(--r-xl);
+  display: flex;
+  padding: var(--sp-2);
+  background: var(--c-text);
+  border-radius: 40px;
   box-shadow: var(--sh-lg);
-  padding: var(--sp-3);
 }
-@media (min-width: 720px) { .mockup { padding: var(--sp-5); } }
+.phone::before { content: ""; flex: 0 0 0; padding-top: 211.1%; }
+.mockup {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: var(--sp-2) var(--sp-3) var(--sp-2);
+  background: var(--c-surface-soft);
+  border-radius: 32px;
+}
+@media (min-width: 400px) { .phone { padding: 10px; } .mockup { padding: var(--sp-2) var(--sp-4) var(--sp-2); } }
 
 /* ===== Шапка ===== */
 .site-header { padding-top: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--c-border); background: var(--c-bg); }
@@ -291,33 +305,36 @@ a:focus-visible { outline: var(--focus-width) solid var(--c-accent); outline-off
 .steps li::before { content: counter(step); display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; flex: 0 0 auto; border-radius: 50%; background: var(--c-accent); color: var(--c-on-accent); font-weight: var(--fw-bold); }
 @media (min-width: 720px) { .steps { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 
-/* ===== Макет экрана ===== */
-.mock { font-size: 15px; line-height: 1.4; user-select: none; }
-.mock-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 12px; margin-bottom: 12px; }
-.mock-title { font-weight: var(--fw-bold); font-size: 1.1rem; }
-.mock-step { color: var(--c-muted); font-size: .85rem; }
+/* ===== Макет экрана (внутри телефона) ===== */
+.mock { font-size: var(--fs-xs); line-height: 1.4; user-select: none; }
+.mock-status { position: relative; display: flex; align-items: center; justify-content: space-between; min-height: 28px; margin-bottom: var(--sp-2); padding: 0 var(--sp-2); font-size: var(--fs-xs); font-weight: var(--fw-bold); }
+.mock-island { position: absolute; left: 50%; top: 4px; width: 72px; height: 20px; margin-left: -36px; border-radius: var(--r-pill); background: var(--c-text); }
+.mock-status svg { width: 22px; height: 12px; color: var(--c-text); }
+.mock-head { margin-bottom: var(--sp-3); }
+.mock-title { font-weight: var(--fw-bold); font-size: var(--fs-sm); line-height: var(--lh-snug); }
+.mock-step { margin-top: 2px; color: var(--c-muted); font-size: var(--fs-xs); }
 .mock-step b { color: var(--c-accent); }
-.mock-ask { display: flex; gap: 8px; margin-bottom: 12px; }
-.mock-input { flex: 1 1 0; min-width: 0; background: var(--c-surface-soft); border: 1px solid var(--c-border); border-radius: var(--r-md); padding: 10px 14px; color: var(--c-muted); }
-.mock-btn { flex: 0 0 auto; align-self: center; background: var(--c-accent); color: var(--c-on-accent); border-radius: var(--r-pill); padding: 10px 16px; font-weight: var(--fw-semibold); }
-.mock-tiles { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; margin-bottom: 12px; }
-.mock-tile { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--r-md); padding: 12px; }
-.mock-num { font-size: 1.8rem; font-weight: var(--fw-bold); line-height: 1.1; }
-.mock-lbl { margin-top: 4px; color: var(--c-muted); font-size: .85rem; }
+.mock-ask { display: flex; align-items: center; gap: var(--sp-2); margin-bottom: var(--sp-3); }
+.mock-input { flex: 1 1 0; min-width: 0; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--r-md); padding: var(--sp-2) var(--sp-3); color: var(--c-muted); font-size: var(--fs-xs); overflow-wrap: anywhere; }
+.mock-btn { position: relative; flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; background: var(--c-accent); color: var(--c-on-accent); border-radius: 50%; }
+.mock-btn svg { width: 20px; height: 20px; }
+.mock-btn span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.mock-tiles { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--sp-2); margin-bottom: var(--sp-3); }
+.mock-tile { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--r-md); padding: var(--sp-2) var(--sp-3); overflow-wrap: anywhere; }
+.mock-num { font-size: 1.5rem; font-weight: var(--fw-bold); line-height: 1.1; }
+.mock-lbl { margin-top: 2px; color: var(--c-muted); font-size: var(--fs-xs); }
 .st-red { color: var(--st-red); }
 .st-amber { color: var(--st-amber); }
 .st-green { color: var(--st-green); }
-.mock-list { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--r-md); padding: 12px; }
-.mock-list h3 { font-size: 1rem; margin: 0 0 4px; }
-.mock-row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 4px 12px; padding: 8px 0; border-top: 1px solid var(--c-border); }
+.mock-list { margin-bottom: var(--sp-4); background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--r-md); padding: var(--sp-2) var(--sp-3); }
+.mock-list h3 { font-size: var(--fs-sm); margin: 0 0 2px; }
+.mock-row { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--sp-2); padding: var(--sp-2) 0; border-top: 1px solid var(--c-border); }
 .mock-row:first-of-type { border-top: 0; }
-.mock-row span:first-child { flex: 1 1 200px; min-width: 0; }
+.mock-row span:first-child { flex: 1 1 0; min-width: 0; overflow-wrap: anywhere; }
+.mock-row .pill { flex: 0 0 auto; white-space: nowrap; }
 .mockup .pill--red { background: var(--st-red-bg); color: var(--st-red); }
 .mockup .pill--amber { background: var(--st-amber-bg); color: var(--st-amber-text); }
-@media (min-width: 720px) {
-  .mock-tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
-  .mock-row span:first-child { flex-basis: 0; }
-}
+.mock-home { flex: 0 0 auto; width: 104px; height: 4px; margin: auto auto 0; border-radius: var(--r-pill); background: var(--c-text); }
 
 /* ===== Модули и безопасность ===== */
 .card__top { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); margin-bottom: var(--sp-4); }
@@ -362,12 +379,17 @@ a:focus-visible { outline: var(--focus-width) solid var(--c-accent); outline-off
   .logo-mark { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .site-cta { background: #fff; color: #000; border: 2px solid #000; }
   #hero, .section--tint, .cta-band, .card, .card--muted, .card--accent, .eyebrow, .pill, .note-placeholder,
-  .icon-tile, .mockup, .mock-input, .mock-tile, .mock-list, .steps li, .compare__arrow span { background: #fff !important; }
+  .icon-tile, .phone, .mockup, .mock-input, .mock-tile, .mock-list, .steps li, .compare__arrow span { background: #fff !important; }
   .btn, .mock-btn { background: #fff !important; border: 2px solid #000 !important; }
   .cta-band { border: 2px solid #000; }
   .eyebrow, .pill, .note-placeholder, .icon-tile, .card { border-color: #000 !important; }
   .ticks li::before, .steps li::before { background: #fff !important; border: 1px solid #000; color: #000 !important; }
   .ticks li::after { border-color: #000 !important; }
+  .phone { border: 2px solid #000; }
+  .mockup { border: 1px solid #000; }
+  .mock-island, .mock-home { background: #fff !important; border: 1px solid #000; }
+  .mock-input, .mock-tile, .mock-list, .mock-row, .mock-btn { border-color: #000 !important; }
+  .mock-btn svg { color: #000; }
   .hero-art .dot, .mockup-stage::before, .mockup-stage::after { display: none !important; }
   .hero-art svg { filter: none !important; }
 }
@@ -487,15 +509,26 @@ a:focus-visible { outline: var(--focus-width) solid var(--c-accent); outline-off
       <h2 class="h2">Так выглядит экран «Срочные задачи»</h2>
       <p class="lead">Просроченное и зависшее видно на одном экране, без звонков.</p>
     </div>
+    <div class="preview-grid">
+    <div class="preview-points">
+      <h3>Что видно на экране</h3>
+      <ul class="ticks">
+        <li>Просроченное</li>
+        <li>Зависшее</li>
+        <li>Отклонения от плана</li>
+      </ul>
+    </div>
     <div class="mockup-stage">
-    <div class="mockup mock" aria-hidden="true">
+    <div class="phone" aria-hidden="true">
+    <div class="mockup mock">
+      <div class="mock-status"><span>9:41</span><span class="mock-island"></span><svg viewBox="0 0 22 12" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="1" width="17" height="10" rx="2.5"/><rect x="3" y="3" width="10" height="6" rx="1" fill="currentColor" stroke="none"/><path d="M20 4.5v3" stroke-linecap="round"/></svg></div>
       <div class="mock-head">
         <div class="mock-title">Пульт директора · ООО «Образец»</div>
         <div class="mock-step">Клик 1 из 3 · <b>Срочные задачи</b></div>
       </div>
       <div class="mock-ask">
         <div class="mock-input">Спросить голосом или текстом: «Что просрочено у Петрова?»</div>
-        <div class="mock-btn">Спросить</div>
+        <div class="mock-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><span>Спросить</span></div>
       </div>
       <div class="mock-tiles">
         <div class="mock-tile"><div class="mock-num st-red">7</div><div class="mock-lbl">Заявки: просрочено</div></div>
@@ -509,6 +542,9 @@ a:focus-visible { outline: var(--focus-width) solid var(--c-accent); outline-off
         <div class="mock-row"><span>Договор с поставщиком ждёт подписи юриста</span><span class="pill pill--amber">2 дня</span></div>
         <div class="mock-row"><span>Дебиторка: 3 клиента просрочили оплату</span><span class="pill pill--amber">неделя</span></div>
       </div>
+      <div class="mock-home"></div>
+    </div>
+    </div>
     </div>
     </div>
   </div></section>
