@@ -88,6 +88,23 @@ section, header, footer { padding-top: 40px; padding-bottom: 40px; }
   #hero h1 { font-size: 2.75rem; }
   #hero .btn { display: inline-block; width: auto; }
 }
+#problem h2, #modules h2, #security h2 { margin-bottom: .75em; }
+.compare { display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 24px; }
+.compare .card h3 { font-size: 1.15rem; }
+.compare ul, #security ul { margin: 0; padding-left: 1.2em; }
+.compare li, #security li { margin-bottom: .5em; }
+.compare .after { background: #ffffff; border-color: var(--accent); }
+.rule { margin: 0; font-size: 1.1rem; }
+.rule ol { margin: .5em 0 0; padding-left: 1.4em; }
+.grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+.grid .card h3 { font-size: 1.15rem; }
+.grid .card p { margin: 0 0 .75em; }
+.grid .card p:last-child { margin-bottom: 0; }
+.start-label { margin: 0 0 12px; color: var(--muted); font-weight: 600; }
+#security .lead { color: var(--muted); }
+@media (min-width: 720px) {
+  .compare, .grid { grid-template-columns: 1fr 1fr; }
+}
 footer { color: var(--muted); font-size: .9rem; border-top: 1px solid var(--line); }
 @media (min-width: 720px) {
   h1 { font-size: 2.75rem; }
@@ -106,9 +123,69 @@ footer { color: var(--muted); font-size: .9rem; border-top: 1px solid var(--line
     <p class="phone">Или позвоните: <span id="phone">+375 XX XXX-XX-XX</span></p>
     <p class="note">(замените на свой ник и номер)</p>
   </div></header>
-  <section id="problem"><div class="wrap"></div></section>
-  <section id="modules"><div class="wrap"></div></section>
-  <section id="security"><div class="wrap"></div></section>
+  <section id="problem"><div class="wrap">
+    <h2>Сегодня ответ на простой вопрос занимает час</h2>
+    <div class="compare">
+      <div class="card before">
+        <h3>Было</h3>
+        <ul>
+          <li>Вы звоните секретарю и просите цифры.</li>
+          <li>Ждёте распечатку или письмо.</li>
+          <li>Цифры из разных таблиц приходится сверять самому.</li>
+        </ul>
+      </div>
+      <div class="card after">
+        <h3>Стало</h3>
+        <ul>
+          <li>Открываете экран «что горит»: срочное видно сразу.</li>
+          <li>Нужная запись находится за три клика.</li>
+          <li>Звонить и ждать не нужно.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card rule">
+      <strong>Правило трёх кликов</strong>
+      <ol>
+        <li>Главный экран.</li>
+        <li>Раздел.</li>
+        <li>Запись с историей.</li>
+      </ol>
+    </div>
+  </div></section>
+  <section id="modules"><div class="wrap">
+    <h2>Что внутри</h2>
+    <p class="start-label">Стартовый набор, который запускаем первым</p>
+    <div class="grid">
+      <div class="card">
+        <h3>Заявки и обращения</h3>
+        <p>Все заявки в одном месте: кто взял в работу, что просрочено.</p>
+      </div>
+      <div class="card">
+        <h3>Автоотчёт из 1С и таблиц</h3>
+        <p>Цифры подтягиваются сами и собираются в один отчёт для директора.</p>
+      </div>
+      <div class="card">
+        <h3>Согласования</h3>
+        <p>Договоры и платежи на подпись видны в одном списке.</p>
+        <p><span class="tag">подключим позже</span></p>
+      </div>
+      <div class="card">
+        <h3>Ремонт и простои</h3>
+        <p>Что сломалось, как долго стоит оборудование и кто чинит.</p>
+        <p><span class="tag">подключим позже</span></p>
+      </div>
+    </div>
+  </div></section>
+  <section id="security"><div class="wrap">
+    <h2>Безопасность данных</h2>
+    <p class="lead">Мы будем соблюдать такие меры:</p>
+    <ul>
+      <li>Данные будут храниться на сервере в Беларуси.</li>
+      <li>Все доступы будут записываться в журнал.</li>
+      <li>Вход будет с подтверждением по коду.</li>
+      <li>Работа только внутри сети компании будет доступна по желанию.</li>
+    </ul>
+  </div></section>
   <section id="contact"><div class="wrap"></div></section>
 </main>
 <footer><div class="wrap"></div></footer>
