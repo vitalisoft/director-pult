@@ -1,3 +1,5 @@
+> Заменён задачей #1 (https://github.com/vitalisoft/director-pult/issues/1), актуальная спека там.
+
 # Демо «Пульт директора» на лендинге: документ дизайна
 
 Дата: 2026-10-24. Основа: лендинг `index.html` и его дизайн `docs/superpowers/specs/2026-10-24-landing-design.md`, дизайн-система `docs/design-system.md`.
