@@ -71,6 +71,28 @@ section, header, footer { padding-top: 40px; padding-bottom: 40px; }
   font-weight: 600;
   line-height: 1.5;
 }
+.site-header { padding-top: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--line); background: var(--bg); }
+.site-header .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0 16px; }
+.logo { display: inline-flex; align-items: center; gap: 10px; min-height: 48px; color: var(--text); text-decoration: none; }
+.logo-mark { width: 36px; height: 36px; flex: 0 0 auto; color: var(--accent); }
+.logo-text { font-weight: 800; font-size: 1.15rem; line-height: 1.1; letter-spacing: .01em; }
+.site-nav { flex: 1 1 100%; }
+.site-nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0 4px; }
+.site-nav a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; color: var(--text); font-size: .95rem; font-weight: 600; text-decoration: none; }
+.site-nav a:hover { color: var(--accent); text-decoration: underline; }
+@media (min-width: 720px) {
+  .site-header { padding-top: 12px; padding-bottom: 12px; }
+  .site-nav { flex: 0 1 auto; }
+  .site-nav a { font-size: 1rem; }
+}
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+#about h2 { margin-bottom: .75em; }
+.placeholder { display: inline-block; margin: 0; padding: 8px 12px; background: var(--bg-soft); border: 2px dashed var(--line); border-radius: var(--radius); color: var(--muted); font-size: .95rem; font-weight: 600; }
+@media print {
+  .logo, .logo-mark, .site-nav a { color: #000; }
+  .site-header { border-bottom-color: #000; }
+  .logo-mark { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
 #hero { padding-top: 24px; padding-bottom: 32px; }
 #hero h1 { font-size: 1.75rem; }
 #hero .lead { font-size: 1.1rem; color: var(--muted); }
@@ -164,7 +186,22 @@ footer { color: var(--muted); font-size: .9rem; border-top: 1px solid var(--line
 }
 </style>
 </head>
-<body>
+<body id="top">
+<header class="site-header"><div class="wrap">
+  <a class="logo" href="#top">
+    <svg class="logo-mark" viewBox="0 0 32 32" role="img" aria-label="Пульт директора"><title>Пульт директора</title><rect width="32" height="32" rx="6" fill="currentColor"/><rect x="6" y="14" width="5" height="12" rx="1" fill="#fff"/><rect x="13.5" y="6" width="5" height="20" rx="1" fill="#fff"/><rect x="21" y="18" width="5" height="8" rx="1" fill="#fff"/></svg>
+    <span class="logo-text">Пульт директора</span>
+  </a>
+  <nav class="site-nav" aria-label="Разделы страницы">
+    <ul>
+      <li><a href="#about">О компании</a></li>
+      <li><a href="#problem">Задачи бизнеса</a></li>
+      <li><a href="#preview">Интерфейс</a></li>
+      <li><a href="#modules">Функционал</a></li>
+      <li><a href="#contact">Контакты</a></li>
+    </ul>
+  </nav>
+</div></header>
 <main>
   <header id="hero"><div class="wrap">
     <h1>Ответ о вашей компании за три клика, а не за час звонков</h1>
@@ -175,6 +212,12 @@ footer { color: var(--muted); font-size: .9rem; border-top: 1px solid var(--line
     <p class="phone">Или позвоните: <span id="phone">+375 XX XXX-XX-XX</span></p>
     <p class="note">(замените на свой ник и номер)</p>
   </div></header>
+  <section id="about"><div class="wrap">
+    <h2>О компании</h2>
+    <p>Мы делаем «Пульт директора»: одну систему, где руководитель малого или среднего бизнеса видит работу всей компании не больше чем за три клика. Начинаем с заявок и автоотчёта.</p>
+    <p>Продукт на раннем этапе: мы собираем его шаг за шагом и ищем первых заказчиков. Если вам интересно, напишите нам, и мы обсудим, как это будет выглядеть у вас.</p>
+    <p class="placeholder">[заполнить: название юрлица, УНП, город, команда]</p>
+  </div></section>
   <section id="problem"><div class="wrap">
     <h2>Сегодня ответ на простой вопрос занимает час</h2>
     <div class="compare">
