@@ -89,21 +89,21 @@ section, header, footer { padding-top: 40px; padding-bottom: 40px; }
   #hero .btn { display: inline-block; width: auto; }
 }
 #problem h2, #modules h2, #security h2 { margin-bottom: .75em; }
-.compare { display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 24px; }
+.compare { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; margin-bottom: 24px; }
 .compare .card h3 { font-size: 1.15rem; }
 .compare ul, #security ul { margin: 0; padding-left: 1.2em; }
 .compare li, #security li { margin-bottom: .5em; }
 .compare .after { background: var(--bg); border-color: var(--accent); }
 .rule { margin: 0; font-size: 1.1rem; }
 .rule ol { margin: .5em 0 0; padding-left: 1.4em; }
-.grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+.grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
 .grid .card h3 { font-size: 1.15rem; }
 .grid .card p { margin: 0 0 .75em; }
 .grid .card p:last-child { margin-bottom: 0; }
 .start-label { margin: 0 0 12px; color: var(--muted); font-weight: 600; }
 #security .lead { color: var(--muted); }
 @media (min-width: 720px) {
-  .compare, .grid { grid-template-columns: 1fr 1fr; }
+  .compare, .grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 }
 #contact h2 { margin-bottom: .5em; }
 #contact .lead { color: var(--muted); }
@@ -196,7 +196,7 @@ footer { color: var(--muted); font-size: .9rem; border-top: 1px solid var(--line
   </div></section>
   <section id="contact"><div class="wrap">
     <h2>Обсудим вашу компанию</h2>
-    <p class="lead">Напишите в Telegram: расскажете, как у вас устроен учёт, и мы покажем, как это будет выглядеть в вашей компании.</p>
+    <p class="lead">Напишите в Telegram: расскажете, как у вас устроен учёт, и мы обсудим, как это будет выглядеть в вашей компании.</p>
     <a class="btn" id="tg2" href="#">Написать в Telegram</a>
     <p class="hint">Или позвоните: <span class="phone">+375 XX XXX-XX-XX</span></p>
     <p class="note">(замените на свой ник и номер)</p>
