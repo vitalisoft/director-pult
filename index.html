@@ -113,6 +113,55 @@ footer { color: var(--muted); font-size: .9rem; border-top: 1px solid var(--line
   h2 { font-size: 1.9rem; }
   section, header, footer { padding-top: 64px; padding-bottom: 64px; }
 }
+#preview h2 { margin-bottom: .5em; }
+#preview .lead { color: var(--muted); }
+#preview .disclaimer { margin: 0 0 12px; color: var(--muted); font-size: .95rem; font-weight: 600; }
+.mock {
+  --st-red: #b91c1c; --st-red-bg: #fee2e2;
+  --st-amber: #b45309; --st-amber-bg: #fef3c7; --st-amber-text: #92400e;
+  --st-green: #15803d;
+  background: var(--bg-soft);
+  border: 2px dashed var(--line);
+  border-radius: 14px;
+  padding: 12px;
+  font-size: 15px;
+  line-height: 1.4;
+  user-select: none;
+}
+.mock-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 4px 12px; margin-bottom: 12px; }
+.mock-title { font-weight: 700; font-size: 1.1rem; }
+.mock-step { color: var(--muted); font-size: .85rem; }
+.mock-step b { color: var(--accent); }
+.mock-ask { display: flex; gap: 8px; margin-bottom: 12px; }
+.mock-input {
+  flex: 1 1 0; min-width: 0;
+  background: #ffffff; border: 1px solid var(--line); border-radius: 8px;
+  padding: 10px 12px; color: var(--muted);
+}
+.mock-btn {
+  flex: 0 0 auto; background: var(--accent); color: #ffffff;
+  border-radius: 8px; padding: 10px 14px; font-weight: 600;
+}
+.mock-tiles { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; margin-bottom: 12px; }
+.mock-tile { background: #ffffff; border: 1px solid var(--line); border-radius: 10px; padding: 12px; }
+.mock-num { font-size: 1.8rem; font-weight: 700; line-height: 1.1; }
+.mock-lbl { margin-top: 4px; color: var(--muted); font-size: .85rem; }
+.st-red { color: var(--st-red); }
+.st-amber { color: var(--st-amber); }
+.st-green { color: var(--st-green); }
+.mock-list { background: #ffffff; border: 1px solid var(--line); border-radius: 10px; padding: 12px; }
+.mock-list h3 { font-size: 1rem; margin: 0 0 4px; }
+.mock-row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 4px 12px; padding: 8px 0; border-top: 1px solid var(--line); }
+.mock-row:first-of-type { border-top: 0; }
+.mock-row span:first-child { flex: 1 1 200px; min-width: 0; }
+.pill { flex: 0 0 auto; padding: 1px 10px; border-radius: 999px; font-size: .8rem; font-weight: 600; white-space: nowrap; }
+.pill.red { background: var(--st-red-bg); color: var(--st-red); }
+.pill.amber { background: var(--st-amber-bg); color: var(--st-amber-text); }
+@media (min-width: 720px) {
+  .mock { padding: 20px; }
+  .mock-tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+  .mock-row span:first-child { flex-basis: 0; }
+}
 </style>
 </head>
 <body>
@@ -153,6 +202,33 @@ footer { color: var(--muted); font-size: .9rem; border-top: 1px solid var(--line
         <li>Раздел.</li>
         <li>Запись с историей.</li>
       </ol>
+    </div>
+  </div></section>
+  <section id="preview"><div class="wrap">
+    <h2>Так выглядит экран «что горит»</h2>
+    <p class="lead">Просроченное и зависшее видно на одном экране, без звонков.</p>
+    <p class="disclaimer">Пример на условных данных. Это макет, а не готовый продукт.</p>
+    <div class="mock" aria-hidden="true">
+      <div class="mock-head">
+        <div class="mock-title">Пульт директора · ООО «Образец»</div>
+        <div class="mock-step">Клик 1 из 3 · <b>Что горит</b></div>
+      </div>
+      <div class="mock-ask">
+        <div class="mock-input">Спросить голосом или текстом: «Что просрочено у Петрова?»</div>
+        <div class="mock-btn">Спросить</div>
+      </div>
+      <div class="mock-tiles">
+        <div class="mock-tile"><div class="mock-num st-red">7</div><div class="mock-lbl">Заявки: просрочено</div></div>
+        <div class="mock-tile"><div class="mock-num st-amber">3</div><div class="mock-lbl">Согласования: зависли &gt; 2 дней</div></div>
+        <div class="mock-tile"><div class="mock-num st-amber">2</div><div class="mock-lbl">Простои оборудования сегодня</div></div>
+        <div class="mock-tile"><div class="mock-num st-green">+4%</div><div class="mock-lbl">Выручка к плану за неделю</div></div>
+      </div>
+      <div class="mock-list">
+        <h3>Главное за сегодня</h3>
+        <div class="mock-row"><span>Заявка №418: простой линии 2, ждём запчасть</span><span class="pill red">3 дня</span></div>
+        <div class="mock-row"><span>Договор с поставщиком ждёт подписи юриста</span><span class="pill amber">2 дня</span></div>
+        <div class="mock-row"><span>Дебиторка: 3 клиента просрочили оплату</span><span class="pill amber">неделя</span></div>
+      </div>
     </div>
   </div></section>
   <section id="modules"><div class="wrap">
