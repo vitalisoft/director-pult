@@ -204,8 +204,14 @@ a:focus-visible { outline: var(--focus-width) solid var(--c-accent); outline-off
 
 /* Рамка телефона: корпус рисуется только CSS, экран внутри - макет приложения */
 .preview-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-6); align-items: center; }
-.preview-points h3 { font-size: var(--fs-h3); line-height: var(--lh-snug); margin: 0 0 var(--sp-4); }
-.preview-points .ticks li { font-size: var(--fs-base); }
+.preview-points { display: grid; gap: var(--sp-4); align-content: center; }
+.preview-points h3 { font-size: var(--fs-h3); line-height: var(--lh-snug); margin: 0; }
+.preview-list { display: grid; gap: var(--sp-4); margin: 0; padding: 0; list-style: none; }
+.preview-list .card { display: flex; gap: var(--sp-4); align-items: flex-start; }
+.preview-list strong { display: block; font-size: var(--fs-h3); line-height: var(--lh-snug); margin-bottom: var(--sp-1); }
+.preview-list span:not(.icon-tile) { display: block; color: var(--c-muted); font-size: var(--fs-body); line-height: var(--lh-body); }
+@media (min-width: 720px) { .preview-list span:not(.icon-tile) { font-size: 1.125rem; } }
+@media (min-width: 960px) { .preview-points { gap: var(--sp-5); } .preview-list { gap: var(--sp-5); } .preview-list .card { padding: var(--sp-5) var(--sp-5); } }
 @media (min-width: 960px) { .preview-grid { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: var(--sp-7); } }
 .mockup-stage { position: relative; width: 100%; max-width: 360px; margin: 0 auto; }
 .mockup-stage::before { content: ""; position: absolute; right: -14%; top: -40px; width: 38%; aspect-ratio: 1; border-radius: 50%; background: var(--c-accent-200); opacity: .55; }
@@ -512,10 +518,10 @@ a:focus-visible { outline: var(--focus-width) solid var(--c-accent); outline-off
     <div class="preview-grid">
     <div class="preview-points">
       <h3>Что видно на экране</h3>
-      <ul class="ticks">
-        <li>Просроченное</li>
-        <li>Зависшее</li>
-        <li>Отклонения от плана</li>
+      <ul class="preview-list">
+        <li class="card"><span class="icon-tile" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg></span><div><strong>Просроченное</strong><span>заявки и оплаты, которые уже просрочены</span></div></li>
+        <li class="card"><span class="icon-tile" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10M7 21h10M8 3c0 5 8 5 8 9s-8 4-8 9"/><path d="M16 3c0 5-8 5-8 9"/></svg></span><div><strong>Зависшее</strong><span>согласования, которые ждут больше двух дней</span></div></li>
+        <li class="card"><span class="icon-tile" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></span><div><strong>Отклонения от плана</strong><span>выручка к плану за неделю</span></div></li>
       </ul>
     </div>
     <div class="mockup-stage">
