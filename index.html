@@ -159,8 +159,8 @@ a:focus-visible { outline: var(--focus-width) solid var(--c-accent); outline-off
 .card--raised { box-shadow: var(--sh-md); }
 @media (min-width: 720px) { .card { padding: var(--sp-6) var(--sp-6); } }
 
-.icon-tile { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; flex: 0 0 auto; border-radius: var(--r-md); background: var(--c-accent-50); color: var(--c-accent); }
-.icon-tile svg { width: 24px; height: 24px; }
+.icon-tile { display: inline-grid; place-items: center; width: 44px; height: 44px; flex: 0 0 auto; border-radius: var(--r-md); background: var(--c-accent-50); color: var(--c-accent); }
+.icon-tile svg { display: block; width: 24px; height: 24px; }
 .icon-tile--muted { background: var(--c-surface); color: var(--c-muted); border: 1px solid var(--c-border); }
 
 .pill {
@@ -284,14 +284,14 @@ a:focus-visible { outline: var(--focus-width) solid var(--c-accent); outline-off
 }
 
 /* ===== О компании ===== */
-.about { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-6); align-items: start; }
+.about { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--sp-6); align-items: center; }
 .about__text p:last-child { margin-bottom: 0; }
 .about__aside { display: grid; gap: var(--sp-4); justify-items: start; }
 .fact-list { width: 100%; margin: 0; padding: var(--sp-2) var(--sp-5); list-style: none; }
-.fact-list li { display: flex; gap: var(--sp-4); align-items: flex-start; padding: var(--sp-4) 0; border-top: 1px solid var(--c-border); }
+.fact-list li { display: flex; gap: var(--sp-4); align-items: center; padding: var(--sp-4) 0; border-top: 1px solid var(--c-border); }
 .fact-list li:first-child { border-top: 0; }
 .fact-list strong { display: block; font-size: var(--fs-base); line-height: var(--lh-snug); }
-.fact-list span { display: block; color: var(--c-muted); }
+.fact-list li > div > span { display: block; color: var(--c-muted); }
 @media (min-width: 960px) { .about { grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: var(--sp-8); } }
 
 /* ===== Было → стало ===== */
