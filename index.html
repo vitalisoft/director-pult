@@ -67,6 +67,9 @@
   /* Фокус */
   --focus-width: 3px;
   --focus-offset: 2px;
+
+  /* Переходы при наведении: одно время и кривая для всех */
+  --t-hover: 160ms ease;
 }
 @media (min-width: 720px) {
   :root { --fs-lead: 1.125rem; --fs-h2: 2.25rem; --section-y: var(--sp-9); --gutter: var(--sp-5); --gap: var(--sp-5); }
@@ -90,7 +93,6 @@ a { color: var(--c-accent); }
 a:focus-visible { outline: var(--focus-width) solid var(--c-accent); outline-offset: var(--focus-offset); }
 @media (prefers-reduced-motion: no-preference) {
   html { scroll-behavior: smooth; }
-  .btn, .site-cta { transition: background-color .15s ease, border-color .15s ease; }
 }
 
 /* ===== Компоненты ===== */
@@ -139,9 +141,7 @@ a:focus-visible { outline: var(--focus-width) solid var(--c-accent); outline-off
 }
 .btn svg { width: 20px; height: 20px; flex: 0 0 auto; }
 .btn--primary { background: var(--c-accent); border-color: var(--c-accent); color: var(--c-on-accent); }
-.btn--primary:hover { background: var(--c-accent-hover); border-color: var(--c-accent-hover); }
 .btn--light { background: var(--c-surface); border-color: var(--c-surface); color: var(--c-accent); }
-.btn--light:hover { background: var(--c-accent-50); border-color: var(--c-accent-50); color: var(--c-accent-hover); }
 .btn--block-sm { display: flex; width: 100%; }
 @media (min-width: 720px) { .btn--block-sm { display: inline-flex; width: auto; } }
 
@@ -245,13 +245,11 @@ a:focus-visible { outline: var(--focus-width) solid var(--c-accent); outline-off
 .logo-text { font-weight: var(--fw-heavy); font-size: 1rem; line-height: 1.1; letter-spacing: .01em; }
 .site-nav { flex: 1 1 100%; order: 3; }
 .site-cta { order: 2; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; background: var(--c-accent); color: var(--c-on-accent); border-radius: var(--r-pill); font-size: .9rem; font-weight: var(--fw-semibold); text-decoration: none; white-space: nowrap; }
-.site-cta:hover { background: var(--c-accent-hover); }
 .site-cta svg { width: 20px; height: 20px; flex: 0 0 auto; }
 .site-cta .full { display: none; }
 @media (max-width: 359px) { .site-cta .short { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } .site-cta { padding: 0 12px; } }
 .site-nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0 4px; }
 .site-nav a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 10px; color: var(--c-text); font-size: .95rem; font-weight: var(--fw-semibold); text-decoration: none; }
-.site-nav a:hover { color: var(--c-accent); text-decoration: underline; }
 @media (min-width: 720px) {
   .site-header { padding-top: 12px; padding-bottom: 12px; }
   .site-header .container { column-gap: 16px; }
@@ -380,8 +378,47 @@ a:focus-visible { outline: var(--focus-width) solid var(--c-accent); outline-off
 .site-footer svg { width: 24px; height: 24px; flex: 0 0 auto; color: var(--c-accent); }
 .site-footer p { margin: 0; }
 
+/* ===== Состояния при наведении и фокусе (единые, см. docs/design-system.md) ===== */
+a, .btn { cursor: pointer; }
+.mockup, .phone, .card, .eyebrow, .pill, .steps li, .cta-steps li { cursor: default; }
+/* Клавиатура видит то же, что мышь */
+.btn--primary:focus-visible, .site-cta:focus-visible { background: var(--c-accent-hover); border-color: var(--c-accent-hover); box-shadow: var(--sh-md); }
+.btn--light:focus-visible { background: var(--c-accent-50); border-color: var(--c-accent-50); color: var(--c-accent-hover); box-shadow: var(--sh-md); }
+.site-nav a:focus-visible { background: var(--c-accent-50); text-decoration: underline; border-radius: var(--r-sm); }
+.logo:focus-visible { color: var(--c-accent); }
+.site-footer a:focus-visible { color: var(--c-accent-hover); text-decoration: underline; }
+@media (prefers-reduced-motion: no-preference) {
+  .btn, .site-cta, .site-nav a, .logo, .site-footer a, .card, .icon-tile, .eyebrow, .pill, .steps li, .cta-steps li, .fact-list li, .mock-tile, .mock-row {
+    transition: background-color var(--t-hover), border-color var(--t-hover), box-shadow var(--t-hover), color var(--t-hover), transform var(--t-hover);
+  }
+}
+@media (hover: hover) and (pointer: fine) {
+  .btn--primary:hover, .site-cta:hover { background: var(--c-accent-hover); border-color: var(--c-accent-hover); box-shadow: var(--sh-md); }
+  .btn--light:hover { background: var(--c-accent-50); border-color: var(--c-accent-50); color: var(--c-accent-hover); box-shadow: var(--sh-md); }
+  .site-nav a:hover { background: var(--c-accent-50); text-decoration: underline; border-radius: var(--r-sm); }
+  .logo:hover { color: var(--c-accent); }
+  .logo:hover .logo-mark { color: var(--c-accent-hover); }
+  .site-footer a:hover { color: var(--c-accent-hover); text-decoration: underline; }
+  .card:hover { border-color: var(--c-accent-200); box-shadow: var(--sh-md); }
+  .icon-tile:hover { box-shadow: 0 0 0 2px var(--c-accent-200); }
+  .icon-tile--muted:hover { border-color: var(--c-muted); }
+  .eyebrow:hover { border-color: var(--c-accent-300); }
+  .eyebrow--on-accent:hover { background: transparent; border-color: var(--c-on-accent); }
+  .pill--accent:hover { border-color: var(--c-accent-300); }
+  .pill--muted:hover { border-color: var(--c-border-strong); }
+  .steps li:hover { border-color: var(--c-accent-300); }
+  .cta-steps li:hover { border-color: var(--c-on-accent); }
+  .fact-list li:hover { background: var(--c-accent-50); box-shadow: calc(-1 * var(--sp-3)) 0 0 var(--c-accent-50), var(--sp-3) 0 0 var(--c-accent-50); border-radius: var(--r-sm); }
+  .mock-tile:hover { border-color: var(--c-accent-200); box-shadow: var(--sh-sm); }
+  .mock-row:hover { background: var(--c-accent-50); box-shadow: calc(-1 * var(--sp-3)) 0 0 var(--c-accent-50), var(--sp-3) 0 0 var(--c-accent-50); }
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .btn:hover, .site-cta:hover, .card:hover { transform: translateY(-2px); }
+}
+
 /* ===== Печать: без декоративных оттенков, чёрный текст на белом ===== */
 @media print {
+  *, *::before, *::after { transition: none !important; transform: none !important; }
   *, *::before, *::after { box-shadow: none !important; text-shadow: none !important; }
   body { background: #fff; color: #000; }
   body *:not(svg):not(svg *) { color: #000 !important; }
