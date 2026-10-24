@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Пульт директора</title>
+<style>
+:root {
+  color-scheme: light;
+  --accent: #1d4ed8;
+  --accent-dark: #1e40af;
+  --text: #1a2230;
+  --muted: #4b5563;
+  --bg: #ffffff;
+  --bg-soft: #f3f6fb;
+  --line: #d9e0ec;
+  --radius: 10px;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 18px;
+  line-height: 1.55;
+  overflow-wrap: break-word;
+}
+h1, h2, h3 { line-height: 1.2; margin: 0 0 .5em; }
+h1 { font-size: 2rem; }
+h2 { font-size: 1.5rem; }
+p { margin: 0 0 1em; }
+a { color: var(--accent); }
+.wrap {
+  max-width: 960px;
+  margin: 0 auto;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+section, header, footer { padding-top: 40px; padding-bottom: 40px; }
+.btn {
+  display: inline-block;
+  min-height: 48px;
+  padding: 12px 24px;
+  background: var(--accent);
+  color: #ffffff;
+  border: 2px solid var(--accent);
+  border-radius: var(--radius);
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+}
+.btn:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
+.btn:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.card {
+  background: var(--bg-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+.tag {
+  display: inline-block;
+  padding: 2px 10px;
+  background: #ffffff;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: .8rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+#hero { padding-top: 24px; padding-bottom: 32px; }
+#hero h1 { font-size: 1.75rem; }
+#hero .lead { font-size: 1.1rem; color: var(--muted); }
+#hero .btn { display: block; width: 100%; }
+#hero .hint { margin: 12px 0 8px; color: var(--muted); font-size: .95rem; }
+#hero .phone { margin: 0; font-weight: 600; }
+#hero .note { color: var(--muted); font-size: .85rem; }
+@media (min-width: 720px) {
+  #hero { padding-top: 64px; padding-bottom: 64px; }
+  #hero h1 { font-size: 2.75rem; }
+  #hero .btn { display: inline-block; width: auto; }
+}
+#problem h2, #modules h2, #security h2 { margin-bottom: .75em; }
+.compare { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; margin-bottom: 24px; }
+.compare .card h3 { font-size: 1.15rem; }
+.compare ul, #security ul { margin: 0; padding-left: 1.2em; }
+.compare li, #security li { margin-bottom: .5em; }
+.compare .after { background: var(--bg); border-color: var(--accent); }
+.rule { margin: 0; font-size: 1.1rem; }
+.rule ol { margin: .5em 0 0; padding-left: 1.4em; }
+.grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+.grid .card h3 { font-size: 1.15rem; }
+.grid .card p { margin: 0 0 .75em; }
+.grid .card p:last-child { margin-bottom: 0; }
+.start-label { margin: 0 0 12px; color: var(--muted); font-weight: 600; }
+#security .lead { color: var(--muted); }
+@media (min-width: 720px) {
+  .compare, .grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+}
+#contact h2 { margin-bottom: .5em; }
+#contact .lead { color: var(--muted); }
+#contact .btn { display: block; width: 100%; }
+#contact .hint { margin: 12px 0 0; color: var(--muted); font-size: .95rem; }
+#contact .phone { font-weight: 600; color: var(--text); }
+#contact .note { margin: 0; color: var(--muted); font-size: .85rem; }
+@media (min-width: 720px) { #contact .btn { display: inline-block; width: auto; } }
+footer p { margin: 0; }
+footer { color: var(--muted); font-size: .9rem; border-top: 1px solid var(--line); }
+@media (min-width: 720px) {
+  h2 { font-size: 1.9rem; }
+  section, header, footer { padding-top: 64px; padding-bottom: 64px; }
+}
+</style>
+</head>
+<body>
+<main>
+  <header id="hero"><div class="wrap">
+    <h1>Ответ о вашей компании за три клика, а не за час звонков</h1>
+    <p class="lead">Пульт директора: для директора малого и среднего бизнеса</p>
+    <a class="btn" id="tg" href="#">Написать в Telegram</a>
+    <p class="hint">Напишите название компании и какие цифры вы собираете вручную</p>
+    <p class="phone">Telegram: <span id="nick">@ваш_ник</span></p>
+    <p class="phone">Или позвоните: <span id="phone">+375 XX XXX-XX-XX</span></p>
+    <p class="note">(замените на свой ник и номер)</p>
+  </div></header>
+  <section id="problem"><div class="wrap">
+    <h2>Сегодня ответ на простой вопрос занимает час</h2>
+    <div class="compare">
+      <div class="card before">
+        <h3>Было</h3>
+        <ul>
+          <li>Вы звоните секретарю и просите цифры.</li>
+          <li>Ждёте распечатку или письмо.</li>
+          <li>Цифры из разных таблиц нередко приходится сверять вручную.</li>
+        </ul>
+      </div>
+      <div class="card after">
+        <h3>Стало</h3>
+        <ul>
+          <li>Открываете экран «что горит»: срочное видно сразу.</li>
+          <li>Нужная запись находится за три клика.</li>
+          <li>Звонить и ждать не нужно.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card rule">
+      <strong>Правило трёх кликов</strong>
+      <ol>
+        <li>Главный экран.</li>
+        <li>Раздел.</li>
+        <li>Запись с историей.</li>
+      </ol>
+    </div>
+  </div></section>
+  <section id="modules"><div class="wrap">
+    <h2>Что внутри</h2>
+    <p class="start-label">Стартовый набор, который запускаем первым</p>
+    <div class="grid">
+      <div class="card">
+        <h3>Заявки и обращения</h3>
+        <p>Все заявки будут собраны в одном месте: кто взял в работу, что просрочено.</p>
+      </div>
+      <div class="card">
+        <h3>Автоотчёт из 1С и таблиц</h3>
+        <p>Цифры будут подтягиваться сами и собираться в один отчёт для директора.</p>
+      </div>
+      <div class="card">
+        <h3>Согласования</h3>
+        <p>Договоры и платежи на подпись будут видны в одном списке.</p>
+        <p><span class="tag">подключим позже</span></p>
+      </div>
+      <div class="card">
+        <h3>Ремонт и простои</h3>
+        <p>В записях будет видно, что сломалось, как долго стоит оборудование и кто чинит.</p>
+        <p><span class="tag">подключим позже</span></p>
+      </div>
+    </div>
+  </div></section>
+  <section id="security"><div class="wrap">
+    <h2>Безопасность данных</h2>
+    <p class="lead">Мы будем соблюдать такие меры:</p>
+    <ul>
+      <li>Данные будут храниться на сервере в Беларуси.</li>
+      <li>Все доступы будут записываться в журнал.</li>
+      <li>Вход будет с подтверждением по коду.</li>
+      <li>Работа только внутри сети компании будет доступна по желанию.</li>
+    </ul>
+  </div></section>
+  <section id="contact"><div class="wrap">
+    <h2>Обсудим вашу компанию</h2>
+    <p class="lead">Напишите в Telegram: расскажете, как у вас устроен учёт, и мы обсудим, как это будет выглядеть в вашей компании.</p>
+    <a class="btn" id="tg2" href="#">Написать в Telegram</a>
+    <p class="hint">Напишите название компании и какие цифры вы собираете вручную</p>
+    <p class="hint">Telegram: <span class="phone">@ваш_ник</span></p>
+    <p class="hint">Или позвоните: <span class="phone">+375 XX XXX-XX-XX</span></p>
+    <p class="note">(замените на свой ник и номер)</p>
+  </div></section>
+</main>
+<footer><div class="wrap">
+  <p>Пульт директора — рабочее название</p>
+</div></footer>
+</body>
+</html>
