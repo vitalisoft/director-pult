@@ -76,6 +76,18 @@ section, header, footer { padding-top: 40px; padding-bottom: 40px; }
   font-weight: 600;
   line-height: 1.5;
 }
+#hero { padding-top: 24px; padding-bottom: 32px; }
+#hero h1 { font-size: 1.75rem; }
+#hero .lead { font-size: 1.1rem; color: var(--muted); }
+#hero .btn { display: block; width: 100%; }
+#hero .hint { margin: 12px 0 8px; color: var(--muted); font-size: .95rem; }
+#hero .phone { margin: 0; font-weight: 600; }
+#hero .note { color: var(--muted); font-size: .85rem; }
+@media (min-width: 720px) {
+  #hero { padding-top: 64px; padding-bottom: 64px; }
+  #hero h1 { font-size: 2.75rem; }
+  #hero .btn { display: inline-block; width: auto; }
+}
 footer { color: var(--muted); font-size: .9rem; border-top: 1px solid var(--line); }
 @media (min-width: 720px) {
   h1 { font-size: 2.75rem; }
@@ -86,7 +98,14 @@ footer { color: var(--muted); font-size: .9rem; border-top: 1px solid var(--line
 </head>
 <body>
 <main>
-  <header id="hero"><div class="wrap"></div></header>
+  <header id="hero"><div class="wrap">
+    <h1>Ответ о вашей компании за три клика, а не за час звонков</h1>
+    <p class="lead">Пульт директора: для директора малого и среднего бизнеса</p>
+    <a class="btn" id="tg" href="#">Написать в Telegram</a>
+    <p class="hint">Напишите название компании и какие цифры вы собираете вручную</p>
+    <p class="phone">Или позвоните: <span id="phone">+375 XX XXX-XX-XX</span></p>
+    <p class="note">(замените на свой ник и номер)</p>
+  </div></header>
   <section id="problem"><div class="wrap"></div></section>
   <section id="modules"><div class="wrap"></div></section>
   <section id="security"><div class="wrap"></div></section>
