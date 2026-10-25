@@ -198,6 +198,21 @@ button { font: inherit; color: inherit; margin: 0; }
 .demo-history li::before { content: ""; position: absolute; left: 0; top: .25em; width: 12px; height: 12px; border: 2px solid var(--c-accent); border-radius: 50%; background: var(--c-surface); }
 .demo-history li:last-child::before { background: var(--c-accent); }
 .demo-history li:not(:last-child)::after { content: ""; position: absolute; left: 5px; top: calc(.25em + 12px); bottom: 0; width: 2px; background: var(--c-border); }
+/* Линия «план и факт» в записи показателя */
+.demo-chart { margin: 0 0 var(--sp-3); }
+.demo-chart h3 { margin: 0 0 var(--sp-1); }
+.demo-chart__legend { display: flex; flex-wrap: wrap; gap: var(--sp-1) var(--sp-4); margin-bottom: var(--sp-2); }
+.demo-chart__key { display: inline-flex; align-items: center; gap: var(--sp-2); white-space: nowrap; font-weight: var(--fw-semibold); }
+.demo-chart__key::before { content: ""; width: 20px; border-top: 3px solid var(--c-accent); }
+.demo-chart__key--plan { color: var(--c-muted); }
+.demo-chart__key--plan::before { border-top: 2px dashed var(--c-muted); }
+.demo-chart__svg { display: block; width: 100%; height: auto; overflow: visible; }
+.demo-chart__grid { stroke: var(--c-border); stroke-width: 1; }
+.demo-chart__plan { fill: none; stroke: var(--c-muted); stroke-width: 2; stroke-dasharray: 5 4; }
+.demo-chart__fact { fill: none; stroke: var(--c-accent); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+.demo-chart__dot { fill: var(--c-surface); stroke: var(--c-accent); stroke-width: 2; }
+.demo-chart__dot--last { fill: var(--c-accent); }
+.demo-chart__axis { display: flex; justify-content: space-between; gap: var(--sp-2); margin-top: var(--sp-1); color: var(--c-muted); font-size: var(--fs-xs); }
 .demo-final { margin: 0; padding-top: var(--sp-3); border-top: 1px solid var(--c-border); font-size: var(--fs-sm); font-weight: var(--fw-semibold); }
 .demo-tg { display: inline-flex; align-items: center; gap: var(--sp-2); min-height: 44px; color: var(--c-accent); font-size: var(--fs-sm); font-weight: var(--fw-semibold); text-decoration: none; }
 .demo-tg svg { width: 20px; height: 20px; flex: 0 0 auto; }
@@ -276,6 +291,7 @@ button .pill { cursor: inherit; }
         </div>
         <div class="demo-group">
           <h3>Разделы</h3>
+          <button type="button" class="demo-link" data-go="metrics"><span>Показатели</span><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></button>
           <button type="button" class="demo-link" data-go="tasks"><span>Задачи и статусы</span><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></button>
           <button type="button" class="demo-link" data-go="docs"><span>Согласования документов</span><span class="demo-link__end"><span class="pill pill--muted">подключим позже</span><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></span></button>
         </div>
@@ -343,11 +359,45 @@ button .pill { cursor: inherit; }
     history: ['3 дня назад — остановилась линия 2', 'сегодня утром — 1,5 часа стоял станок ЧПУ-присадки, запущен']
   };
 
-  /* Показатели: пока только записи П-1 и П-7 (раздел «Показатели», графики и П-2…П-6 — тикет #5) */
+  /* Показатели в порядке П-1…П-7. st: green — норма, amber — отклонение.
+     chart: точки линии, слева самая старая; labels — подписи первой и последней точки */
+  var WEEKS = ['7 нед. назад', 'эта неделя'], MONTHS = ['8 мес. назад', 'прошлый месяц'];
   var METRICS = [
-    { id: 'm1', code: 'П-1', label: 'Выручка к плану', title: 'Выручка к плану за неделю', value: '46 800 руб. (+4% к плану)', plan: '45 000 руб.', status: 'норма',
+    { id: 'm1', code: 'П-1', label: 'Выручка к плану', title: 'Выручка к плану за неделю', value: '46 800 руб. (+4% к плану)', plan: '45 000 руб.', status: 'норма', st: 'green', pill: 'норма',
+      chart: { title: 'Выручка за неделю, руб.', unit: 'руб.', labels: WEEKS,
+        plan: [42000, 42000, 43000, 43000, 44000, 44000, 45000, 45000], fact: [40100, 43500, 41200, 44800, 42900, 45600, 44100, 46800] },
       history: 'Третью неделю подряд около плана. На этой неделе сдали две кухни, выручка выше плана на 1 800 руб.' },
-    { id: 'm7', code: 'П-7', label: 'Дебиторка', title: 'Дебиторка: клиенты просрочили оплату', value: '7 350 руб., 3 клиента, самый старый долг — неделя', plan: '0 руб.', status: 'отклонение',
+    { id: 'm2', code: 'П-2', label: 'Заявки от клиентов', title: 'Заявки от клиентов и цена заявки (прошлый месяц)', value: '64 заявки, 47 руб. за заявку', plan: '70 заявок, не дороже 45 руб.', status: 'отклонение', st: 'amber', pill: 'отклонение',
+      chart: { title: 'Заявки от клиентов в месяц, шт.', unit: 'шт.', labels: MONTHS,
+        plan: [60, 60, 65, 65, 65, 70, 70, 70], fact: [58, 63, 61, 67, 70, 72, 68, 64] },
+      history: 'Заявок меньше плана на 6. Цена заявки выросла с 41 до 47 руб.: подорожала реклама в соцсетях.' },
+    { id: 'm3', code: 'П-3', label: 'Рекламные каналы', title: 'Рекламные каналы и бюджет (прошлый месяц)', value: '3 000 руб.', plan: '3 000 руб.', status: 'норма', st: 'green', pill: 'норма',
+      chart: { title: 'Рекламный бюджет в месяц, руб.', unit: 'руб.', labels: MONTHS,
+        plan: [2500, 2500, 2800, 2800, 2800, 3000, 3000, 3000], fact: [2450, 2600, 2750, 2800, 2900, 2950, 3100, 3000] },
+      channels: [
+        ['Реклама в поиске', '1 400 руб.', '30 заявок · 47 руб. за заявку'],
+        ['Реклама в соцсетях', '900 руб.', '16 заявок · 56 руб. за заявку'],
+        ['Доски объявлений', '400 руб.', '12 заявок · 33 руб. за заявку'],
+        ['Листовки в мебельных центрах', '300 руб.', '2 заявки · 150 руб. за заявку'],
+        ['Рекомендации клиентов', '0 руб.', '4 заявки']
+      ],
+      channelTotal: ['Итого', '3 000 руб.', '64 заявки · 47 руб. за заявку'],
+      history: 'Бюджет потрачен ровно. Дешевле всего заявки с досок объявлений (33 руб.), дороже всего с листовок (150 руб.); из крупных каналов дороже всего соцсети (56 руб.).' },
+    { id: 'm4', code: 'П-4', label: 'Фонд оплаты труда', title: 'Фонд оплаты труда (прошлый месяц)', value: '52 400 руб.', plan: '50 000 руб.', status: 'отклонение (+4,8%)', st: 'amber', pill: 'отклонение',
+      chart: { title: 'Фонд оплаты труда в месяц, руб.', unit: 'руб.', labels: MONTHS,
+        plan: [48000, 48000, 48000, 49000, 49000, 50000, 50000, 50000], fact: [47600, 48300, 47900, 49200, 48800, 50100, 49700, 52400] },
+      history: 'Перерасход 2 400 руб.: сверхурочные монтажникам и выход в субботу из-за простоя линии 2.' },
+    { id: 'm5', code: 'П-5', label: 'Выработка станков', title: 'Выработка станков за неделю', value: '71% загрузки', plan: '85%', status: 'отклонение', st: 'amber', pill: 'отклонение',
+      chart: { title: 'Загрузка станков за неделю, %', unit: '%', labels: WEEKS,
+        plan: [85, 85, 85, 85, 85, 85, 85, 85], fact: [82, 86, 84, 80, 85, 83, 78, 71] },
+      history: 'Загрузка упала с 78% до 71%: третий день стоит линия 2, сегодня 1,5 часа стоял станок ЧПУ.' },
+    { id: 'm6', code: 'П-6', label: 'Объём за месяц', title: 'Объём за месяц: сдано заказов (прошлый месяц)', value: '24 заказа (15 кухонь, 9 шкафов)', plan: '26 заказов', status: 'отклонение (−8%)', st: 'amber', pill: 'отклонение',
+      chart: { title: 'Сдано заказов в месяц, шт.', unit: 'шт.', labels: MONTHS,
+        plan: [22, 22, 24, 24, 24, 26, 26, 26], fact: [21, 23, 22, 25, 24, 25, 27, 24] },
+      history: 'Не сдали 2 заказа из плана: задержка плиты и замер, перенесённый клиентом.' },
+    { id: 'm7', code: 'П-7', label: 'Дебиторка', title: 'Дебиторка: клиенты просрочили оплату', value: '7 350 руб., 3 клиента, самый старый долг — неделя', plan: '0 руб.', status: 'отклонение', st: 'amber', pill: 'отклонение',
+      chart: { title: 'Просроченная дебиторка на конец недели, руб.', unit: 'руб.', labels: WEEKS,
+        plan: [0, 0, 0, 0, 0, 0, 0, 0], fact: [2100, 0, 1500, 3200, 2400, 1800, 4300, 7350] },
       debtors: [
         ['Клиент: шкаф-купе, ул. Полевая', '2 100 руб.', '7 дней (неделя)'],
         ['Клиент: кухня, ул. Школьная', '3 400 руб.', '5 дней'],
@@ -464,10 +514,76 @@ button .pill { cursor: inherit; }
     tail(box, DOWNTIME.history);
   }
 
-  /* ===== Запись показателя (раздел «Показатели» и графики достроит тикет #5) ===== */
+  /* ===== Линия «план и факт»: встроенный SVG, подписи словами снаружи ===== */
+  var SVG_NS = 'http://www.w3.org/2000/svg';
+  function svg(tag, attrs) {
+    var n = document.createElementNS(SVG_NS, tag);
+    for (var a in attrs) n.setAttribute(a, attrs[a]);
+    return n;
+  }
+  /* 46800 → «46 800» */
+  function num(v) { return String(v).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
+  function amount(v, unit) { return num(v) + (unit === '%' ? '%' : ' ' + unit); }
+
+  function chart(c) {
+    var wrap = el('div', 'demo-chart'), last = c.fact.length - 1;
+    wrap.appendChild(el('h3', null, c.title));
+    var legend = wrap.appendChild(el('div', 'demo-chart__legend'));
+    legend.appendChild(el('span', 'demo-chart__key demo-chart__key--fact', 'факт ' + amount(c.fact[last], c.unit)));
+    legend.appendChild(el('span', 'demo-chart__key demo-chart__key--plan', 'план ' + amount(c.plan[last], c.unit)));
+
+    /* Масштаб по всем точкам плана и факта, поля по 10% сверху и снизу */
+    var W = 300, H = 120, PAD = 6;
+    var all = c.plan.concat(c.fact), lo = Math.min.apply(null, all), hi = Math.max.apply(null, all);
+    var span = hi - lo || 1;
+    lo -= span * .1; hi += span * .1;
+    function x(i) { return PAD + i * (W - 2 * PAD) / last; }
+    function y(v) { return PAD + (hi - v) * (H - 2 * PAD) / (hi - lo); }
+    function points(list) {
+      var p = [];
+      for (var i = 0; i < list.length; i++) p.push(x(i).toFixed(1) + ',' + y(list[i]).toFixed(1));
+      return p.join(' ');
+    }
+
+    function range(list) {
+      return list[0] === list[last] ? amount(list[0], c.unit) + ' всё время' : 'от ' + amount(list[0], c.unit) + ' до ' + amount(list[last], c.unit);
+    }
+    var s = svg('svg', { viewBox: '0 0 ' + W + ' ' + H, 'class': 'demo-chart__svg', role: 'img',
+      'aria-label': 'Факт: ' + range(c.fact) + ', план: ' + range(c.plan) });
+    for (var g = 0; g < 3; g++) {
+      var gy = PAD + g * (H - 2 * PAD) / 2;
+      s.appendChild(svg('line', { x1: 0, x2: W, y1: gy, y2: gy, 'class': 'demo-chart__grid' }));
+    }
+    s.appendChild(svg('polyline', { points: points(c.plan), 'class': 'demo-chart__plan' }));
+    s.appendChild(svg('polyline', { points: points(c.fact), 'class': 'demo-chart__fact' }));
+    for (var i = 0; i <= last; i++) {
+      s.appendChild(svg('circle', { cx: x(i), cy: y(c.fact[i]), r: 3, 'class': 'demo-chart__dot' + (i === last ? ' demo-chart__dot--last' : '') }));
+    }
+    wrap.appendChild(s);
+
+    var axis = wrap.appendChild(el('div', 'demo-chart__axis'));
+    axis.appendChild(el('span', null, c.labels[0]));
+    axis.appendChild(el('span', null, c.labels[1]));
+    return wrap;
+  }
+
+  /* ===== Раздел «Показатели» и записи показателей ===== */
+  function renderMetrics() {
+    var list = card(view('metrics', 2, 'Показатели', 'Показатели'));
+    for (var i = 0; i < METRICS.length; i++) {
+      list.appendChild(row(METRICS[i].id, METRICS[i].title, METRICS[i].value, METRICS[i].st, METRICS[i].pill));
+      renderMetric(METRICS[i]);
+    }
+  }
+
   function renderMetric(m) {
     var box = card(view(m.id, 3, m.label, m.title));
     box.appendChild(fields([['Значение', m.value], ['План', m.plan], ['Статус', m.status]]));
+    box.appendChild(chart(m.chart));
+    if (m.channels) {
+      box.appendChild(el('h3', null, 'Каналы'));
+      box.appendChild(fields(m.channels.concat([m.channelTotal]), 'demo-fields--money'));
+    }
     if (m.debtors) {
       box.appendChild(el('h3', null, 'Должники'));
       var rows = [];
@@ -478,10 +594,10 @@ button .pill { cursor: inherit; }
     tail(box, [m.history]);
   }
 
+  renderMetrics();
   renderTasks();
   renderDocs();
   renderDowntime();
-  for (var k = 0; k < METRICS.length; k++) renderMetric(METRICS[k]);
 
   /* ===== Навигация демо: путь хранится только в памяти ===== */
   var path = ['home'];
