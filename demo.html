@@ -151,6 +151,9 @@ button { font: inherit; color: inherit; margin: 0; }
 .mock-list h3 { font-size: var(--fs-sm); margin: 0 0 2px; }
 .mock-row { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--sp-2); padding: var(--sp-2) 0; border-top: 1px solid var(--c-border); }
 .mock-row:first-of-type { border-top: 0; }
+/* Карточка с несколькими группами строк (срез сотрудника): первая строка под заголовком без линии, между группами отступ */
+.mock-list h3 + .mock-row { border-top: 0; }
+.mock-list .mock-row + h3 { margin-top: var(--sp-3); }
 .mock-row span:first-child { flex: 1 1 0; min-width: 0; overflow-wrap: anywhere; }
 .mock-row .pill { flex: 0 0 auto; white-space: nowrap; }
 .demo-screen .pill--red { background: var(--st-red-bg); color: var(--st-red); }
@@ -192,6 +195,8 @@ button { font: inherit; color: inherit; margin: 0; }
 .demo-field dt span { display: block; }
 .demo-fields--money dd { white-space: nowrap; }
 .demo-field dd { margin: 0; font-weight: var(--fw-semibold); text-align: right; }
+/* «Ответственный»: кнопка в срез сотрудника, выглядит как ссылка, а не как плашка */
+.demo-who { display: inline-flex; align-items: center; justify-content: flex-end; min-height: 44px; padding: 0; background: none; border: 0; color: var(--c-accent); font-size: inherit; font-weight: var(--fw-semibold); text-align: right; text-decoration: underline; text-underline-offset: 2px; }
 .demo-history { margin: 0 0 var(--sp-3); padding: 0; list-style: none; }
 .demo-history li { position: relative; padding: 0 0 var(--sp-3) var(--sp-5); }
 .demo-history li:last-child { padding-bottom: 0; font-weight: var(--fw-semibold); }
@@ -226,8 +231,9 @@ button .pill { cursor: inherit; }
 .demo-link:focus-visible, .mock-tile:focus-visible { border-color: var(--c-accent-200); box-shadow: var(--sh-sm); }
 .demo-row:focus-visible { background: var(--c-accent-50); box-shadow: calc(-1 * var(--sp-3)) 0 0 var(--c-accent-50), var(--sp-3) 0 0 var(--c-accent-50); }
 .demo-tg:focus-visible { color: var(--c-accent-hover); text-decoration: underline; }
+.demo-who:focus-visible { color: var(--c-accent-hover); }
 @media (prefers-reduced-motion: no-preference) {
-  .demo-navbtn, .demo-link, .demo-row, .demo-tg, .mock-tile { transition: background-color var(--t-hover), border-color var(--t-hover), box-shadow var(--t-hover), color var(--t-hover); }
+  .demo-navbtn, .demo-link, .demo-row, .demo-tg, .demo-who, .mock-tile { transition: background-color var(--t-hover), border-color var(--t-hover), box-shadow var(--t-hover), color var(--t-hover); }
   .demo-view:not([hidden]) { animation: demo-fade 160ms ease; }
   @keyframes demo-fade { from { opacity: 0; } to { opacity: 1; } }
 }
@@ -237,6 +243,7 @@ button .pill { cursor: inherit; }
   .mock-tile:hover { border-color: var(--c-accent-200); box-shadow: var(--sh-sm); }
   .demo-row:hover { background: var(--c-accent-50); box-shadow: calc(-1 * var(--sp-3)) 0 0 var(--c-accent-50), var(--sp-3) 0 0 var(--c-accent-50); }
   .demo-tg:hover { color: var(--c-accent-hover); text-decoration: underline; }
+  .demo-who:hover { color: var(--c-accent-hover); }
 }
 
 /* ===== Печать: только главный экран, чёрный текст на белом ===== */
@@ -294,6 +301,7 @@ button .pill { cursor: inherit; }
           <button type="button" class="demo-link" data-go="metrics"><span>Показатели</span><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></button>
           <button type="button" class="demo-link" data-go="tasks"><span>Задачи и статусы</span><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></button>
           <button type="button" class="demo-link" data-go="docs"><span>Согласования документов</span><span class="demo-link__end"><span class="pill pill--muted">подключим позже</span><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></span></button>
+          <button type="button" class="demo-link" data-go="staff"><span>Сотрудники</span><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></button>
         </div>
       </section>
       <!-- Разделы и записи строит скрипт из блока данных ниже -->
@@ -419,6 +427,21 @@ button .pill { cursor: inherit; }
   }
   function person(key) { var p = STAFF[key]; return p.name + ', ' + p.role; }
   function later() { var p = el('p', 'demo-later'); p.appendChild(el('span', 'pill pill--muted', 'подключим позже')); return p; }
+  /* «Ответственный» в записи: кнопка, ведёт в срез сотрудника */
+  function who(key) {
+    var b = el('button', 'demo-who', person(key));
+    b.type = 'button';
+    b.setAttribute('data-go', key);
+    return b;
+  }
+
+  /* 1 нажатие, 2–4 нажатия, 5+ нажатий (11–14 нажатий) */
+  function plural(n, one, few, many) {
+    var m10 = n % 10, m100 = n % 100;
+    if (m10 === 1 && m100 !== 11) return one;
+    if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return few;
+    return many;
+  }
 
   /* Экран: шаг 2 — раздел, шаг 3 — запись */
   function view(id, step, label, title, isLater) {
@@ -448,25 +471,28 @@ button .pill { cursor: inherit; }
     return b;
   }
 
-  /* Поля записи: [[подпись, значение, мелкая строка под подписью], …] */
+  /* Поля записи: [[подпись, значение, мелкая строка под подписью], …]; значение — текст или готовый узел (кнопка) */
   function fields(list, cls) {
     var dl = el('dl', 'demo-fields' + (cls ? ' ' + cls : ''));
     for (var i = 0; i < list.length; i++) {
-      var f = el('div', 'demo-field'), dt = el('dt', null, list[i][0]);
+      var f = el('div', 'demo-field'), dt = el('dt', null, list[i][0]), v = list[i][1];
       if (list[i][2]) dt.appendChild(el('span', null, list[i][2]));
       f.appendChild(dt);
-      f.appendChild(el('dd', null, list[i][1]));
+      if (v && v.nodeType) f.appendChild(el('dd')).appendChild(v);
+      else f.appendChild(el('dd', null, v));
       dl.appendChild(f);
     }
     return dl;
   }
 
-  /* Общий хвост каждой записи: история, строка финала, Telegram */
+  /* Общий хвост каждой записи: история (если есть), строка финала, Telegram */
   function tail(box, history) {
-    box.appendChild(el('h3', null, 'История'));
-    var ol = el('ol', 'demo-history');
-    for (var i = 0; i < history.length; i++) ol.appendChild(el('li', null, history[i]));
-    box.appendChild(ol);
+    if (history && history.length) {
+      box.appendChild(el('h3', null, 'История'));
+      var ol = el('ol', 'demo-history');
+      for (var i = 0; i < history.length; i++) ol.appendChild(el('li', null, history[i]));
+      box.appendChild(ol);
+    }
     var p = el('p', 'demo-final', 'Вы нашли это за ');
     p.appendChild(el('span', null, '2')).setAttribute('data-count', '');
     p.appendChild(document.createTextNode(' '));
@@ -486,7 +512,7 @@ button .pill { cursor: inherit; }
       var t = TASKS[i];
       list.appendChild(row(t.id, t.title, STAFF[t.who].name + ' · ' + t.due, t.st, t.pill));
       var box = card(view(t.id, 3, t.label, t.title));
-      box.appendChild(fields([['Ответственный', person(t.who)], ['Срок', t.due], ['Статус', t.status]]));
+      box.appendChild(fields([['Ответственный', who(t.who)], ['Срок', t.due], ['Статус', t.status]]));
       tail(box, t.history);
     }
   }
@@ -498,7 +524,7 @@ button .pill { cursor: inherit; }
       var d = DOCS[i];
       list.appendChild(row(d.id, d.short, 'Ждёт ' + d.wait + ' · ' + STAFF[d.who].name, d.st, d.days));
       var box = card(view(d.id, 3, d.short, d.title, true));
-      box.appendChild(fields([['Сумма', d.sum], ['Чего ждёт', d.wait], ['Ждёт', d.days], ['Ответственный', person(d.who)], ['Статус', d.status]]));
+      box.appendChild(fields([['Сумма', d.sum], ['Чего ждёт', d.wait], ['Ждёт', d.days], ['Ответственный', who(d.who)], ['Статус', d.status]]));
       tail(box, d.history);
     }
   }
@@ -512,6 +538,47 @@ button .pill { cursor: inherit; }
       box.appendChild(fields([['Простой сегодня', p.today], ['Причина', p.reason], ['Кто чинит', person(p.who)], ['Сейчас', p.now], ['Связь', p.link]]));
     }
     tail(box, DOWNTIME.history);
+  }
+
+  /* ===== Раздел «Сотрудники» и срезы по сотрудникам ===== */
+  /* Записи сотрудника из списка: red — в просрочку, остальные — в other; порядок как в списке */
+  function split(list, key, red, other) {
+    for (var i = 0; i < list.length; i++) {
+      if (list[i].who === key) (list[i].st === 'red' ? red : other).push(list[i]);
+    }
+  }
+  function taskRow(t) { return row(t.id, t.title, t.due, t.st, t.pill); }
+  function docRow(d) { return row(d.id, d.short, 'Ждёт ' + d.wait, d.st, d.days); }
+
+  /* Блок среза: заголовок и строки; пустой блок не выводится */
+  function group(box, title, items, make) {
+    if (!items.length) return;
+    box.appendChild(el('h3', null, title));
+    for (var i = 0; i < items.length; i++) box.appendChild(make(items[i]));
+  }
+
+  function renderStaff() {
+    var list = card(view('staff', 2, 'Сотрудники', 'Сотрудники'));
+    for (var key in STAFF) {
+      var p = STAFF[key], redT = [], otherT = [], redD = [], otherD = [];
+      split(TASKS, key, redT, otherT);
+      split(DOCS, key, redD, otherD);
+      /* Просрочки считаются из данных: красные задачи плюс красные документы */
+      var n = redT.length + redD.length;
+      list.appendChild(row(key, p.name, p.role, n > 0 ? 'red' : 'muted', n + ' ' + plural(n, 'просрочка', 'просрочки', 'просрочек')));
+
+      /* Срез: просрочено (задачи, затем документы), остальные задачи, остальные документы */
+      var box = card(view(key, 3, p.name, person(key)));
+      if (n) {
+        box.appendChild(el('h3', null, 'Просрочено'));
+        for (var i = 0; i < redT.length; i++) box.appendChild(taskRow(redT[i]));
+        for (var j = 0; j < redD.length; j++) box.appendChild(docRow(redD[j]));
+      }
+      group(box, 'Остальные задачи', otherT, taskRow);
+      group(box, 'Остальные документы', otherD, docRow);
+      /* Истории сотрудника в данных нет: только финал и Telegram */
+      tail(box);
+    }
   }
 
   /* ===== Линия «план и факт»: встроенный SVG, подписи словами снаружи ===== */
@@ -598,20 +665,13 @@ button .pill { cursor: inherit; }
   renderTasks();
   renderDocs();
   renderDowntime();
+  renderStaff();
 
   /* ===== Навигация демо: путь хранится только в памяти ===== */
   var path = ['home'];
   var views = scroll.querySelectorAll('.demo-view');
   var step = document.getElementById('demo-step');
   var nav = document.getElementById('demo-nav');
-
-  /* 1 нажатие, 2–4 нажатия, 5+ нажатий (11–14 нажатий) */
-  function plural(n, one, few, many) {
-    var m10 = n % 10, m100 = n % 100;
-    if (m10 === 1 && m100 !== 11) return one;
-    if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return few;
-    return many;
-  }
 
   function show() {
     var id = path[path.length - 1], cur = views[0];
