@@ -135,8 +135,11 @@ button { font: inherit; color: inherit; margin: 0; }
 .mock-step { margin-top: 2px; color: var(--c-muted); font-size: var(--fs-xs); }
 .mock-step b { color: var(--c-accent); }
 .mock-ask { display: flex; align-items: center; gap: var(--sp-2); margin-bottom: var(--sp-3); }
-.mock-input { flex: 1 1 0; min-width: 0; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--r-md); padding: var(--sp-2) var(--sp-3); color: var(--c-muted); font-size: var(--fs-xs); overflow-wrap: anywhere; }
-.mock-btn { position: relative; flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; background: var(--c-accent); color: var(--c-on-accent); border-radius: 50%; }
+/* Поле «Спросить»: 16px, иначе iPhone приближает страницу при фокусе */
+.mock-input { flex: 1 1 0; min-width: 0; min-height: 44px; margin: 0; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--r-md); padding: var(--sp-2) var(--sp-3); color: var(--c-text); font-family: inherit; font-size: var(--fs-body); line-height: var(--lh-snug); -webkit-appearance: none; appearance: none; }
+.mock-input::placeholder { color: var(--c-muted); opacity: 1; }
+.mock-input:focus-visible { outline: var(--focus-width) solid var(--c-accent); outline-offset: var(--focus-offset); }
+.mock-btn { position: relative; flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 0; background: var(--c-accent); color: var(--c-on-accent); border: 0; border-radius: 50%; }
 .mock-btn svg { width: 20px; height: 20px; }
 .mock-btn span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .mock-tiles { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--sp-2); margin-bottom: var(--sp-3); }
@@ -185,6 +188,13 @@ button { font: inherit; color: inherit; margin: 0; }
 .demo-row { width: 100%; min-height: 44px; align-items: center; background: none; border-left: 0; border-right: 0; border-bottom: 0; color: var(--c-text); font-size: var(--fs-xs); text-align: left; }
 .demo-row__sub { display: block; margin-top: 2px; color: var(--c-muted); }
 .demo-later { margin: calc(-1 * var(--sp-1)) 0 var(--sp-3); }
+/* Список вопросов «Спросить»: в потоке страницы, чтобы клавиатура телефона его не закрывала */
+.demo-ask__hint { margin: 0; padding: var(--sp-2) 0; color: var(--c-muted); font-size: var(--fs-sm); line-height: var(--lh-snug); }
+.demo-ask__hint:empty { padding: 0; }
+.demo-ask .mock-row { border-top: 1px solid var(--c-border); }
+.demo-ask .mock-row[hidden] { display: none; }
+.demo-ask .demo-ask__first { border-top: 0; }
+.demo-ask__hint:not(:empty) ~ .demo-ask__first { border-top: 1px solid var(--c-border); }
 
 /* Карточка записи: поля, история, финал */
 .demo-fields { margin: 0 0 var(--sp-3); }
@@ -254,7 +264,7 @@ button .pill { cursor: inherit; }
   .demo-page { display: block; height: auto; min-height: 0; padding: 0; }
   .demo-device { width: auto; height: auto !important; padding: 0; border-radius: 0; }
   .demo-screen, .demo-scroll { overflow: visible; }
-  .mock-status, .mock-home, .mock-step, .demo-nav, .demo-view { display: none !important; }
+  .mock-status, .mock-home, .mock-step, .demo-nav, .demo-view, .demo-ask { display: none !important; }
   .demo-view[data-screen="home"] { display: block !important; }
   .mock-input, .mock-tile, .mock-list, .mock-row, .demo-link, .pill { background: #fff !important; border-color: #000 !important; }
   .pill, .demo-link { border: 1px solid #000 !important; }
@@ -281,8 +291,12 @@ button .pill { cursor: inherit; }
       <section class="demo-view" data-screen="home" data-step="1" data-label="Главный экран">
         <h2 tabindex="-1">Срочные задачи</h2>
         <div class="mock-ask">
-          <div class="mock-input">Спросить голосом или текстом: «Что просрочено у Петрова?»</div>
-          <div class="mock-btn"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><span>Спросить</span></div>
+          <input type="search" class="mock-input" id="demo-ask-input" autocomplete="off" enterkeyhint="search" placeholder="Спросить голосом или текстом: «Что просрочено у Петрова?»" aria-label="Спросить" aria-expanded="false" aria-controls="demo-ask-list">
+          <button type="button" class="mock-btn" data-ask aria-controls="demo-ask-list" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><span>Спросить</span></button>
+        </div>
+        <!-- Вопросы строит скрипт из массива ASK -->
+        <div class="mock-list demo-ask" id="demo-ask-list" hidden>
+          <p class="demo-ask__hint" role="status"></p>
         </div>
         <div class="mock-tiles">
           <button type="button" class="mock-tile" data-go="tasks"><span class="mock-num st-red">7</span><span class="mock-lbl">Заявки: просрочено</span></button>
@@ -414,6 +428,21 @@ button .pill { cursor: inherit; }
       debtTotal: ['Итого', '7 350 руб.', '3 клиента'],
       history: 'Три клиента не внесли окончательную оплату после монтажа. Самый старый долг — 7 дней.' }
   ];
+
+  /* «Спросить»: готовые вопросы и экран, куда ведёт каждый */
+  var ASK = [
+    { q: 'Что просрочено у Петрова?', go: 's1' },
+    { q: 'Почему стоит линия 2?', go: 't1' },
+    { q: 'Какая выручка к плану?', go: 'm1' },
+    { q: 'Кто из клиентов не заплатил?', go: 'm7' },
+    { q: 'Что ждёт подписи юриста?', go: 's6' },
+    { q: 'Сколько стоит одна заявка?', go: 'm2' },
+    { q: 'Какая реклама работает лучше?', go: 'm3' },
+    { q: 'Сколько ушло на зарплату?', go: 'm4' },
+    { q: 'Как загружены станки?', go: 'm5' },
+    { q: 'Что с монтажом на Лесной?', go: 't7' }
+  ];
+  var ASK_HINT = 'В демо есть вопросы только из списка. Выберите один из них';
 
   /* ===== Сборка экранов: только createElement и textContent ===== */
   var scroll = document.getElementById('demo-scroll');
@@ -695,9 +724,118 @@ button .pill { cursor: inherit; }
       final.querySelector('[data-count]').textContent = n;
       final.querySelector('[data-word]').textContent = plural(n, 'нажатие', 'нажатия', 'нажатий');
     }
+    /* При любом переходе список «Спросить» закрыт, поле пустое */
+    closeAsk(true);
     scroll.scrollTop = 0;
     cur.querySelector('h2').focus({ preventScroll: true });
   }
+
+  /* ===== «Спросить»: поле, микрофон и список готовых вопросов ===== */
+  var askRow = document.querySelector('.mock-ask');
+  var askInput = document.getElementById('demo-ask-input');
+  var askMic = askRow.querySelector('[data-ask]');
+  var askList = document.getElementById('demo-ask-list');
+  var askHint = askList.querySelector('.demo-ask__hint');
+  var askBtns = [], askFound = false, askQuiet = false;
+
+  /* Нижний регистр, ё → е, всё кроме букв и цифр — пробелы; на выходе слова */
+  function words(s) {
+    s = s.toLowerCase().replace(/ё/g, 'е').replace(/[^a-zа-я0-9]+/g, ' ');
+    s = s.replace(/^ +| +$/g, '');
+    return s ? s.split(' ') : [];
+  }
+
+  for (var a = 0; a < ASK.length; a++) {
+    var qb = el('button', 'mock-row demo-row');
+    qb.type = 'button';
+    qb.setAttribute('data-go', ASK[a].go);
+    qb.appendChild(el('span', null, ASK[a].q));
+    askList.appendChild(qb);
+    askBtns.push({ btn: qb, text: words(ASK[a].q).join(' ') });
+  }
+
+  /* Вопрос подходит, если каждое введённое слово входит в него подстрокой */
+  function filterAsk() {
+    var w = words(askInput.value), n = 0, i, j, ok;
+    for (i = 0; i < askBtns.length; i++) {
+      ok = true;
+      for (j = 0; j < w.length; j++) if (askBtns[i].text.indexOf(w[j]) < 0) { ok = false; break; }
+      askBtns[i].ok = ok;
+      if (ok) n++;
+    }
+    /* Ничего не нашлось: подсказка и весь список */
+    askFound = w.length > 0 && n > 0;
+    askHint.textContent = w.length && !n ? ASK_HINT : '';
+    var first = true;
+    for (i = 0; i < askBtns.length; i++) {
+      askBtns[i].btn.hidden = n > 0 && !askBtns[i].ok;
+      askBtns[i].btn.classList.toggle('demo-ask__first', first && !askBtns[i].btn.hidden);
+      if (!askBtns[i].btn.hidden) first = false;
+    }
+  }
+  function visibleAsk() {
+    var v = [];
+    for (var i = 0; i < askBtns.length; i++) if (!askBtns[i].btn.hidden) v.push(askBtns[i].btn);
+    return v;
+  }
+
+  /* Открыть: строка поля у верхнего края области прокрутки; path и history не трогаем */
+  function openAsk() {
+    if (!askList.hidden) return;
+    askList.hidden = false;
+    askInput.setAttribute('aria-expanded', 'true');
+    askMic.setAttribute('aria-expanded', 'true');
+    scroll.scrollTop = Math.max(0, askRow.getBoundingClientRect().top - scroll.getBoundingClientRect().top + scroll.scrollTop - 8);
+  }
+  /* Закрыть; reset — ещё очистить поле и сбросить фильтр */
+  function closeAsk(reset) {
+    askList.hidden = true;
+    askInput.setAttribute('aria-expanded', 'false');
+    askMic.setAttribute('aria-expanded', 'false');
+    if (reset) { askInput.value = ''; filterAsk(); }
+  }
+  /* Вернуть фокус в поле, не открывая список заново */
+  function focusInput() {
+    askQuiet = true;
+    askInput.focus();
+    askQuiet = false;
+  }
+
+  filterAsk();
+  askInput.addEventListener('focus', function () { if (!askQuiet) openAsk(); });
+  askInput.addEventListener('click', openAsk);
+  askInput.addEventListener('input', function () { filterAsk(); openAsk(); });
+  /* Микрофон фокус в поле не ставит: на телефоне не выскакивает клавиатура */
+  askMic.addEventListener('click', function () {
+    if (askList.hidden) openAsk(); else closeAsk();
+  });
+
+  askInput.addEventListener('keydown', function (e) {
+    var v = visibleAsk();
+    if (e.key === 'Escape') {
+      if (!askList.hidden) { e.preventDefault(); closeAsk(); }
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      openAsk();
+      if (v.length) v[0].focus();
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      /* Только если ввод совпал хотя бы с одним вопросом */
+      if (askFound && v.length) v[0].click();
+    }
+  });
+  askList.addEventListener('keydown', function (e) {
+    var v = visibleAsk(), i = v.indexOf(document.activeElement);
+    if (e.key === 'Escape') { e.preventDefault(); closeAsk(); focusInput(); }
+    else if (i < 0) return;
+    else if (e.key === 'ArrowDown') { e.preventDefault(); if (i < v.length - 1) v[i + 1].focus(); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); if (i > 0) v[i - 1].focus(); else focusInput(); }
+  });
+  /* Нажатие вне поля и списка закрывает список. pointerdown, а не click:
+     фокус открывает список и сдвигает прокрутку, и click приходит уже не на поле */
+  document.addEventListener('pointerdown', function (e) {
+    if (!askList.hidden && !e.target.closest('.mock-ask, .demo-ask')) closeAsk();
+  });
 
   /* Перезагрузка с #запись начинается с главного экрана, # пропадает */
   history.replaceState(state(), '', url('home'));
