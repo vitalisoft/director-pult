@@ -488,7 +488,7 @@ button .pill { cursor: inherit; }
   var scroll = document.getElementById('demo-scroll');
   var CHAT_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/></svg>';
   var CALL_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>';
-  var TG_ICON ='<svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M21.5 3.2 2.6 10.5c-.9.4-.9 1.2 0 1.5l4.8 1.5 1.9 5.6c.2.6.9.8 1.4.4l2.6-2.2 4.6 3.4c.6.4 1.3.1 1.5-.6l3.2-15.2c.2-.9-.5-1.4-1.1-1.7zM8.6 13l9.3-5.7-7.2 6.9-.3 3z"/></svg>';
+  var TG_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M21.5 3.2 2.6 10.5c-.9.4-.9 1.2 0 1.5l4.8 1.5 1.9 5.6c.2.6.9.8 1.4.4l2.6-2.2 4.6 3.4c.6.4 1.3.1 1.5-.6l3.2-15.2c.2-.9-.5-1.4-1.1-1.7zM8.6 13l9.3-5.7-7.2 6.9-.3 3z"/></svg>';
 
   function el(tag, cls, text) {
     var n = document.createElement(tag);
@@ -569,6 +569,10 @@ button .pill { cursor: inherit; }
     p.appendChild(document.createTextNode(' '));
     p.appendChild(el('span', null, 'нажатия')).setAttribute('data-word', '');
     box.appendChild(p);
+    /* Заголовок записи получает фокус при переходе; описание — строка финала, скринридер читает их вместе */
+    var screen = box.closest('.demo-view');
+    p.id = 'final-' + screen.getAttribute('data-screen');
+    screen.querySelector('h2').setAttribute('aria-describedby', p.id);
     var a = el('a', 'demo-tg');
     a.href = '#';
     a.innerHTML = TG_ICON;
@@ -956,7 +960,7 @@ button .pill { cursor: inherit; }
     if (e.target.closest('a[href="#"]')) { e.preventDefault(); return; }
     /* «Отправить» в чате: путь и история не меняются */
     if (e.target.closest('[data-send]')) { sendChat(e.target.closest('.demo-chat')); return; }
-    var t =e.target.closest('[data-go], [data-back], [data-root]');
+    var t = e.target.closest('[data-go], [data-back], [data-root]');
     if (!t) return;
     if (t.hasAttribute('data-go')) {
       path.push(t.getAttribute('data-go'));
