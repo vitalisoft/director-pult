@@ -667,8 +667,13 @@ button .pill { cursor: inherit; }
   renderDowntime();
   renderStaff();
 
-  /* ===== Навигация демо: путь хранится только в памяти ===== */
+  /* ===== Навигация демо: путь в памяти и в истории браузера =====
+     Каждая запись истории хранит полный путь, экран виден в адресе после #.
+     Записи от прошлой загрузки страницы считаются главным экраном. */
   var path = ['home'];
+  var LOAD = String(Date.now());
+  function url(id) { return id === 'home' ? location.pathname + location.search : '#' + id; }
+  function state() { return { load: LOAD, path: path.slice() }; }
   var views = scroll.querySelectorAll('.demo-view');
   var step = document.getElementById('demo-step');
   var nav = document.getElementById('demo-nav');
@@ -694,13 +699,29 @@ button .pill { cursor: inherit; }
     cur.querySelector('h2').focus({ preventScroll: true });
   }
 
+  /* Перезагрузка с #запись начинается с главного экрана, # пропадает */
+  history.replaceState(state(), '', url('home'));
+
+  window.addEventListener('popstate', function (e) {
+    if (e.state && e.state.load === LOAD) path = e.state.path.slice();
+    else { path = ['home']; history.replaceState(state(), '', url('home')); }
+    show();
+  });
+
   document.addEventListener('click', function (e) {
+    /* Ссылки на # («Написать в Telegram») иначе создают запись в истории и сбрасывают демо */
+    if (e.target.closest('a[href="#"]')) { e.preventDefault(); return; }
     var t = e.target.closest('[data-go], [data-back], [data-root]');
     if (!t) return;
-    if (t.hasAttribute('data-go')) path.push(t.getAttribute('data-go'));
-    else if (t.hasAttribute('data-back')) { if (path.length > 1) path.pop(); }
-    else path = ['home'];
-    show();
+    if (t.hasAttribute('data-go')) {
+      path.push(t.getAttribute('data-go'));
+      history.pushState(state(), '', url(t.getAttribute('data-go')));
+      show();
+    }
+    /* «Назад» и «Главная» идут по истории браузера, экран меняет popstate */
+    else if (t.hasAttribute('data-back')) { if (path.length > 1) history.back(); }
+    else if (path.length > 1) history.go(1 - path.length);
+    else show();
   });
 })();
 </script>
