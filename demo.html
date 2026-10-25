@@ -140,9 +140,10 @@ button { font: inherit; color: inherit; margin: 0; }
 .mock-btn svg { width: 20px; height: 20px; }
 .mock-btn span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .mock-tiles { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--sp-2); margin-bottom: var(--sp-3); }
-.mock-tile { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--r-md); padding: var(--sp-2) var(--sp-3); overflow-wrap: anywhere; }
-.mock-num { font-size: 1.5rem; font-weight: var(--fw-bold); line-height: 1.1; }
-.mock-lbl { margin-top: 2px; color: var(--c-muted); font-size: var(--fs-xs); }
+.mock-tile { display: block; width: 100%; min-width: 0; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--r-md); padding: var(--sp-2) var(--sp-3); color: inherit; font: inherit; text-align: left; overflow-wrap: anywhere; }
+.mock-tile .pill { margin-top: var(--sp-1); white-space: normal; }
+.mock-num { display: block; font-size: 1.5rem; font-weight: var(--fw-bold); line-height: 1.1; }
+.mock-lbl { display: block; margin-top: 2px; color: var(--c-muted); font-size: var(--fs-xs); }
 .st-red { color: var(--st-red); }
 .st-amber { color: var(--st-amber); }
 .st-green { color: var(--st-green); }
@@ -154,6 +155,9 @@ button { font: inherit; color: inherit; margin: 0; }
 .mock-row .pill { flex: 0 0 auto; white-space: nowrap; }
 .demo-screen .pill--red { background: var(--st-red-bg); color: var(--st-red); }
 .demo-screen .pill--amber { background: var(--st-amber-bg); color: var(--st-amber-text); }
+/* «В работе»: статусного фона нет, поэтому белый фон, рамка и зелёный текст (5,02 на #fff) */
+.demo-screen .pill--green { background: var(--c-surface); border-color: var(--c-border); color: var(--st-green); }
+.pill--muted { background: var(--c-surface-soft); border-color: var(--c-border); color: var(--c-muted); }
 .mock-home { flex: 0 0 auto; width: 104px; height: 4px; border-radius: var(--r-pill); background: var(--c-text); }
 
 /* ===== Шапка экрана: кнопки «Назад» и «Главная» ===== */
@@ -170,14 +174,24 @@ button { font: inherit; color: inherit; margin: 0; }
 .demo-group h3 { font-size: var(--fs-sm); margin: 0 0 var(--sp-2); }
 .demo-link { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-2); width: 100%; min-height: 44px; padding: var(--sp-2) var(--sp-3); background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--r-md); color: var(--c-text); font-size: var(--fs-sm); font-weight: var(--fw-semibold); text-align: left; }
 .demo-link svg { width: 20px; height: 20px; flex: 0 0 auto; color: var(--c-accent); }
+.demo-link > span:first-child { flex: 1 1 auto; }
+.demo-link + .demo-link { margin-top: var(--sp-2); }
+/* Плашка в кнопке раздела на узком экране переносится на две строки, слова не рвутся */
+.demo-link__end { flex: 0 1 auto; display: inline-flex; align-items: center; gap: var(--sp-2); }
+.demo-link__end .pill { white-space: normal; text-align: center; }
 .demo-row { width: 100%; min-height: 44px; align-items: center; background: none; border-left: 0; border-right: 0; border-bottom: 0; color: var(--c-text); font-size: var(--fs-xs); text-align: left; }
+.demo-row__sub { display: block; margin-top: 2px; color: var(--c-muted); }
+.demo-later { margin: calc(-1 * var(--sp-1)) 0 var(--sp-3); }
 
 /* Карточка записи: поля, история, финал */
 .demo-fields { margin: 0 0 var(--sp-3); }
-.demo-field { display: flex; justify-content: space-between; align-items: center; gap: var(--sp-2); padding: var(--sp-2) 0; border-top: 1px solid var(--c-border); }
+.demo-fields + h3 { margin-top: var(--sp-1); }
+.demo-field { display: flex; justify-content: space-between; align-items: baseline; gap: var(--sp-3); padding: var(--sp-2) 0; border-top: 1px solid var(--c-border); }
 .demo-field:first-child { border-top: 0; }
 .demo-field dt { color: var(--c-muted); }
-.demo-field dd { margin: 0; min-width: 0; font-weight: var(--fw-semibold); text-align: right; overflow-wrap: anywhere; }
+.demo-field dt span { display: block; }
+.demo-fields--money dd { white-space: nowrap; }
+.demo-field dd { margin: 0; font-weight: var(--fw-semibold); text-align: right; }
 .demo-history { margin: 0 0 var(--sp-3); padding: 0; list-style: none; }
 .demo-history li { position: relative; padding: 0 0 var(--sp-3) var(--sp-5); }
 .demo-history li:last-child { padding-bottom: 0; font-weight: var(--fw-semibold); }
@@ -190,11 +204,11 @@ button { font: inherit; color: inherit; margin: 0; }
 
 /* ===== Состояния при наведении и фокусе (единые, см. docs/design-system.md) ===== */
 a, button { cursor: pointer; }
-.demo-view h2, .mock-tile, .pill { cursor: default; }
+.demo-view h2, .pill { cursor: default; }
 button .pill { cursor: inherit; }
 /* Клавиатура видит то же, что мышь */
 .demo-navbtn:focus-visible { background: var(--c-accent-50); border-color: var(--c-accent-200); color: var(--c-accent-hover); }
-.demo-link:focus-visible { border-color: var(--c-accent-200); box-shadow: var(--sh-sm); }
+.demo-link:focus-visible, .mock-tile:focus-visible { border-color: var(--c-accent-200); box-shadow: var(--sh-sm); }
 .demo-row:focus-visible { background: var(--c-accent-50); box-shadow: calc(-1 * var(--sp-3)) 0 0 var(--c-accent-50), var(--sp-3) 0 0 var(--c-accent-50); }
 .demo-tg:focus-visible { color: var(--c-accent-hover); text-decoration: underline; }
 @media (prefers-reduced-motion: no-preference) {
@@ -249,59 +263,231 @@ button .pill { cursor: inherit; }
           <div class="mock-btn"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg><span>Спросить</span></div>
         </div>
         <div class="mock-tiles">
-          <div class="mock-tile"><div class="mock-num st-red">7</div><div class="mock-lbl">Заявки: просрочено</div></div>
-          <div class="mock-tile"><div class="mock-num st-amber">3</div><div class="mock-lbl">Согласования: зависли &gt; 2 дней</div></div>
-          <div class="mock-tile"><div class="mock-num st-amber">2</div><div class="mock-lbl">Простои оборудования сегодня</div></div>
-          <div class="mock-tile"><div class="mock-num st-green">+4%</div><div class="mock-lbl">Выручка к плану за неделю</div></div>
+          <button type="button" class="mock-tile" data-go="tasks"><span class="mock-num st-red">7</span><span class="mock-lbl">Заявки: просрочено</span></button>
+          <button type="button" class="mock-tile" data-go="docs"><span class="mock-num st-amber">3</span><span class="mock-lbl">Согласования: зависли &gt; 2 дней</span></button>
+          <button type="button" class="mock-tile" data-go="downtime"><span class="mock-num st-amber">2</span><span class="mock-lbl">Простои оборудования сегодня</span><span class="pill pill--muted">подключим позже</span></button>
+          <button type="button" class="mock-tile" data-go="m1"><span class="mock-num st-green">+4%</span><span class="mock-lbl">Выручка к плану за неделю</span></button>
         </div>
         <div class="mock-list">
           <h3>Главное за сегодня</h3>
-          <div class="mock-row"><span>Заявка №418: простой линии 2, ждём запчасть</span><span class="pill pill--red">3 дня</span></div>
-          <div class="mock-row"><span>Договор с поставщиком ждёт подписи юриста</span><span class="pill pill--amber">2 дня</span></div>
-          <div class="mock-row"><span>Дебиторка: 3 клиента просрочили оплату</span><span class="pill pill--amber">неделя</span></div>
+          <button type="button" class="mock-row demo-row" data-go="t1"><span>Заявка №418: простой линии 2, ждём запчасть</span><span class="pill pill--red">3 дня</span></button>
+          <button type="button" class="mock-row demo-row" data-go="d1"><span>Договор с поставщиком ждёт подписи юриста</span><span class="pill pill--amber">2 дня</span></button>
+          <button type="button" class="mock-row demo-row" data-go="m7"><span>Дебиторка: 3 клиента просрочили оплату</span><span class="pill pill--amber">неделя</span></button>
         </div>
         <div class="demo-group">
           <h3>Разделы</h3>
           <button type="button" class="demo-link" data-go="tasks"><span>Задачи и статусы</span><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></button>
+          <button type="button" class="demo-link" data-go="docs"><span>Согласования документов</span><span class="demo-link__end"><span class="pill pill--muted">подключим позже</span><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></span></button>
         </div>
       </section>
-      <section class="demo-view" data-screen="tasks" data-step="2" data-label="Задачи и статусы" hidden>
-        <h2 tabindex="-1">Задачи и статусы</h2>
-        <div class="mock-list">
-          <button type="button" class="mock-row demo-row" data-go="task418"><span>Заявка №418: простой линии 2, ждём запчасть</span><span class="pill pill--red">3 дня</span></button>
-        </div>
-      </section>
-      <section class="demo-view" data-screen="task418" data-step="3" data-label="Заявка №418" hidden>
-        <h2 tabindex="-1">Заявка №418: простой линии 2, ждём запчасть</h2>
-        <div class="mock-list">
-          <dl class="demo-fields">
-            <div class="demo-field"><dt>Ответственный</dt><dd>Петров</dd></div>
-            <div class="demo-field"><dt>Срок</dt><dd>просрочен на 3 дня</dd></div>
-          </dl>
-          <h3>История</h3>
-          <ol class="demo-history">
-            <li>Создана</li>
-            <li>Взята в работу</li>
-            <li>Ждёт запчасть</li>
-          </ol>
-          <p class="demo-final">Вы нашли это за <span data-count>2</span> <span data-word>нажатия</span></p>
-          <a class="demo-tg" href="#"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M21.5 3.2 2.6 10.5c-.9.4-.9 1.2 0 1.5l4.8 1.5 1.9 5.6c.2.6.9.8 1.4.4l2.6-2.2 4.6 3.4c.6.4 1.3.1 1.5-.6l3.2-15.2c.2-.9-.5-1.4-1.1-1.7zM8.6 13l9.3-5.7-7.2 6.9-.3 3z"/></svg>Написать в Telegram</a>
-        </div>
-      </section>
+      <!-- Разделы и записи строит скрипт из блока данных ниже -->
     </div>
     <div class="mock-home" aria-hidden="true"></div>
   </div>
   </div>
 </main>
 <script>
-/* ===== Навигация демо: путь хранится только в памяти ===== */
 (function () {
-  var path = ['home'];
+  /* ===== Данные демо: тексты дословно из docs/superpowers/specs/2026-10-24-demo-data.md ===== */
+  var STAFF = {
+    s1: { name: 'Петров', role: 'начальник производства' },
+    s2: { name: 'Иванов', role: 'менеджер по продажам' },
+    s3: { name: 'Смирнова', role: 'главный бухгалтер' },
+    s4: { name: 'Кузнецов', role: 'снабженец' },
+    s5: { name: 'Попов', role: 'бригадир монтажа' },
+    s6: { name: 'Соколова', role: 'юрист' }
+  };
+
+  /* Задачи в порядке показа: просроченные, потом зависшая, потом в работе.
+     st: red — просрочено, amber — зависло, green — в работе; pill — текст плашки в строке */
+  var TASKS = [
+    { id: 't1', code: 'З-1', label: 'Заявка №418', title: 'Заявка №418: простой линии 2, ждём запчасть', who: 's1', due: 'просрочен на 3 дня', st: 'red', pill: '3 дня', status: 'просрочено',
+      history: ['6 дней назад — создана', '5 дней назад — взята в работу', '3 дня назад — ждёт запчасть'] },
+    { id: 't2', code: 'З-2', label: 'Заявка №421', title: 'Заявка №421: раскрой фасадов, кухня, ул. Садовая', who: 's1', due: 'просрочен на 2 дня', st: 'red', pill: '2 дня', status: 'просрочено',
+      history: ['7 дней назад — создана', '6 дней назад — взята в работу', '2 дня назад — не хватило плиты нужного цвета, ждём поставку'] },
+    { id: 't3', code: 'З-3', label: 'Заявка №425', title: 'Заявка №425: присадка корпусов, шкаф-купе, ул. Вишнёвая', who: 's1', due: 'просрочен на 1 день', st: 'red', pill: '1 день', status: 'просрочено',
+      history: ['5 дней назад — создана', '4 дня назад — взята в работу', 'вчера — срок прошёл, готово 2 корпуса из 5', 'сегодня — станок ЧПУ-присадки стоял 1,5 часа'] },
+    { id: 't4', code: 'З-4', label: 'Заявка №419', title: 'Заявка №419: замер кухни, ул. Луговая', who: 's2', due: 'просрочен на 4 дня', st: 'red', pill: '4 дня', status: 'просрочено',
+      history: ['8 дней назад — создана', '7 дней назад — взята в работу', '4 дня назад — клиент перенёс замер, новый день не назначен'] },
+    { id: 't5', code: 'З-5', label: 'Заявка №423', title: 'Заявка №423: расчёт для клиента, шкафы в офис', who: 's2', due: 'просрочен на 2 дня', st: 'red', pill: '2 дня', status: 'просрочено',
+      history: ['5 дней назад — создана', '4 дня назад — взята в работу', '2 дня назад — ждём от снабжения цены на фурнитуру'] },
+    { id: 't6', code: 'З-6', label: 'Заявка №420', title: 'Заявка №420: заказать кромку и фурнитуру', who: 's4', due: 'просрочен на 5 дней', st: 'red', pill: '5 дней', status: 'просрочено',
+      history: ['9 дней назад — создана', '8 дней назад — взята в работу', '4 дня назад — счёт поставщика передан в бухгалтерию (Д-2), не оплачен'] },
+    { id: 't7', code: 'З-7', label: 'Заявка №416', title: 'Заявка №416: монтаж кухни, ул. Лесная', who: 's5', due: 'просрочен на 1 день', st: 'red', pill: '1 день', status: 'просрочено',
+      history: ['10 дней назад — создана', '2 дня назад — взята в работу', 'вчера — не хватило двух петель, монтаж не закончен'] },
+    { id: 't9', code: 'З-9', label: 'Заявка №424', title: 'Заявка №424: сверка остатков ЛДСП на складе', who: 's4', due: 'через 3 дня', st: 'amber', pill: 'зависла', status: 'зависло, 4 дня без движения',
+      history: ['6 дней назад — создана', '5 дней назад — взята в работу', '4 дня назад — сверено 2 стеллажа из 6, дальше без движения'] },
+    { id: 't8', code: 'З-8', label: 'Заявка №427', title: 'Заявка №427: монтаж шкафа, ул. Речная', who: 's5', due: 'через 2 дня', st: 'green', pill: 'в работе', status: 'в работе',
+      history: ['4 дня назад — создана', 'сегодня — взята в работу, бригада выехала'] }
+  ];
+
+  /* Документы в порядке показа: зависшие (red, ждут больше 2 дней), потом ждут (amber) */
+  var DOCS = [
+    { id: 'd2', code: 'Д-2', short: 'Счёт за кромку и фурнитуру', title: 'Счёт на оплату: кромка и фурнитура, ООО «Поставщик фурнитуры»', sum: '3 860 руб.', wait: 'оплаты бухгалтером', days: '4 дня', who: 's3', st: 'red', status: 'зависло',
+      history: ['4 дня назад — счёт пришёл от снабжения', '3 дня назад — бухгалтер попросила исправить реквизиты', 'вчера — исправленный счёт получен, не оплачен'] },
+    { id: 'd3', code: 'Д-3', short: 'Договор на гардеробную', title: 'Договор с клиентом: гардеробная, ул. Озёрная', sum: '7 800 руб.', wait: 'подписи юриста', days: '3 дня', who: 's6', st: 'red', status: 'зависло',
+      history: ['4 дня назад — подготовлен менеджером', '3 дня назад — передан юристу на подпись'] },
+    { id: 'd4', code: 'Д-4', short: 'Договор на доставку плит', title: 'Договор на доставку плит, ООО «Перевозчик»', sum: '1 200 руб. в месяц', wait: 'документов от снабженца', days: '5 дней', who: 's4', st: 'red', status: 'зависло',
+      history: ['6 дней назад — проект пришёл от перевозчика', '5 дней назад — юрист попросила у снабжения тарифы и доверенность', 'документов пока нет'] },
+    { id: 'd1', code: 'Д-1', short: 'Договор на поставку ЛДСП', title: 'Договор с поставщиком: поставка ЛДСП на квартал, ООО «Поставщик плит»', sum: '42 000 руб.', wait: 'подписи юриста', days: '2 дня', who: 's6', st: 'amber', status: 'ждёт',
+      history: ['3 дня назад — проект пришёл от поставщика', '2 дня назад — передан юристу на подпись'] },
+    { id: 'd5', code: 'Д-5', short: 'Предоплата поставщику плит', title: 'Платёж: предоплата поставщику плит по текущему договору', sum: '14 200 руб.', wait: 'подписи директора', days: '1 день', who: 's3', st: 'amber', status: 'ждёт',
+      history: ['вчера — платёж подготовлен бухгалтером', 'вчера — передан директору на подпись'] }
+  ];
+
+  var DOWNTIME = {
+    items: [
+      { code: 'ПР-1', machine: 'Линия 2 (кромкооблицовочный станок)', today: 'весь день, стоит 3-й день', reason: 'сломался узел подачи кромки, ждём запчасть', who: 's1', now: 'стоит', link: 'Заявка №418' },
+      { code: 'ПР-2', machine: 'Станок ЧПУ-присадки', today: '1,5 часа утром', reason: 'сбой программы', who: 's1', now: 'работает', link: 'Заявка №425' }
+    ],
+    history: ['3 дня назад — остановилась линия 2', 'сегодня утром — 1,5 часа стоял станок ЧПУ-присадки, запущен']
+  };
+
+  /* Показатели: пока только записи П-1 и П-7 (раздел «Показатели», графики и П-2…П-6 — тикет #5) */
+  var METRICS = [
+    { id: 'm1', code: 'П-1', label: 'Выручка к плану', title: 'Выручка к плану за неделю', value: '46 800 руб. (+4% к плану)', plan: '45 000 руб.', status: 'норма',
+      history: 'Третью неделю подряд около плана. На этой неделе сдали две кухни, выручка выше плана на 1 800 руб.' },
+    { id: 'm7', code: 'П-7', label: 'Дебиторка', title: 'Дебиторка: клиенты просрочили оплату', value: '7 350 руб., 3 клиента, самый старый долг — неделя', plan: '0 руб.', status: 'отклонение',
+      debtors: [
+        ['Клиент: шкаф-купе, ул. Полевая', '2 100 руб.', '7 дней (неделя)'],
+        ['Клиент: кухня, ул. Школьная', '3 400 руб.', '5 дней'],
+        ['Клиент: офисная мебель, ООО «Заказчик»', '1 850 руб.', '3 дня']
+      ],
+      debtTotal: ['Итого', '7 350 руб.', '3 клиента'],
+      history: 'Три клиента не внесли окончательную оплату после монтажа. Самый старый долг — 7 дней.' }
+  ];
+
+  /* ===== Сборка экранов: только createElement и textContent ===== */
   var scroll = document.getElementById('demo-scroll');
+  var TG_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M21.5 3.2 2.6 10.5c-.9.4-.9 1.2 0 1.5l4.8 1.5 1.9 5.6c.2.6.9.8 1.4.4l2.6-2.2 4.6 3.4c.6.4 1.3.1 1.5-.6l3.2-15.2c.2-.9-.5-1.4-1.1-1.7zM8.6 13l9.3-5.7-7.2 6.9-.3 3z"/></svg>';
+
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+  function person(key) { var p = STAFF[key]; return p.name + ', ' + p.role; }
+  function later() { var p = el('p', 'demo-later'); p.appendChild(el('span', 'pill pill--muted', 'подключим позже')); return p; }
+
+  /* Экран: шаг 2 — раздел, шаг 3 — запись */
+  function view(id, step, label, title, isLater) {
+    var s = el('section', 'demo-view');
+    s.setAttribute('data-screen', id);
+    s.setAttribute('data-step', step);
+    s.setAttribute('data-label', label);
+    s.hidden = true;
+    var h = el('h2', null, title);
+    h.tabIndex = -1;
+    s.appendChild(h);
+    if (isLater) s.appendChild(later());
+    scroll.appendChild(s);
+    return s;
+  }
+  function card(screen) { return screen.appendChild(el('div', 'mock-list')); }
+
+  /* Строка раздела: название, под ним мелкая подпись, справа плашка */
+  function row(go, name, sub, st, pill) {
+    var b = el('button', 'mock-row demo-row');
+    b.type = 'button';
+    b.setAttribute('data-go', go);
+    var t = el('span', null, name);
+    t.appendChild(el('span', 'demo-row__sub', sub));
+    b.appendChild(t);
+    b.appendChild(el('span', 'pill pill--' + st, pill));
+    return b;
+  }
+
+  /* Поля записи: [[подпись, значение, мелкая строка под подписью], …] */
+  function fields(list, cls) {
+    var dl = el('dl', 'demo-fields' + (cls ? ' ' + cls : ''));
+    for (var i = 0; i < list.length; i++) {
+      var f = el('div', 'demo-field'), dt = el('dt', null, list[i][0]);
+      if (list[i][2]) dt.appendChild(el('span', null, list[i][2]));
+      f.appendChild(dt);
+      f.appendChild(el('dd', null, list[i][1]));
+      dl.appendChild(f);
+    }
+    return dl;
+  }
+
+  /* Общий хвост каждой записи: история, строка финала, Telegram */
+  function tail(box, history) {
+    box.appendChild(el('h3', null, 'История'));
+    var ol = el('ol', 'demo-history');
+    for (var i = 0; i < history.length; i++) ol.appendChild(el('li', null, history[i]));
+    box.appendChild(ol);
+    var p = el('p', 'demo-final', 'Вы нашли это за ');
+    p.appendChild(el('span', null, '2')).setAttribute('data-count', '');
+    p.appendChild(document.createTextNode(' '));
+    p.appendChild(el('span', null, 'нажатия')).setAttribute('data-word', '');
+    box.appendChild(p);
+    var a = el('a', 'demo-tg');
+    a.href = '#';
+    a.innerHTML = TG_ICON;
+    a.appendChild(document.createTextNode('Написать в Telegram'));
+    box.appendChild(a);
+  }
+
+  /* ===== Раздел «Задачи и статусы» и записи задач ===== */
+  function renderTasks() {
+    var list = card(view('tasks', 2, 'Задачи и статусы', 'Задачи и статусы'));
+    for (var i = 0; i < TASKS.length; i++) {
+      var t = TASKS[i];
+      list.appendChild(row(t.id, t.title, STAFF[t.who].name + ' · ' + t.due, t.st, t.pill));
+      var box = card(view(t.id, 3, t.label, t.title));
+      box.appendChild(fields([['Ответственный', person(t.who)], ['Срок', t.due], ['Статус', t.status]]));
+      tail(box, t.history);
+    }
+  }
+
+  /* ===== Раздел «Согласования документов» и записи документов ===== */
+  function renderDocs() {
+    var list = card(view('docs', 2, 'Согласования документов', 'Согласования документов', true));
+    for (var i = 0; i < DOCS.length; i++) {
+      var d = DOCS[i];
+      list.appendChild(row(d.id, d.short, 'Ждёт ' + d.wait + ' · ' + STAFF[d.who].name, d.st, d.days));
+      var box = card(view(d.id, 3, d.short, d.title, true));
+      box.appendChild(fields([['Сумма', d.sum], ['Чего ждёт', d.wait], ['Ждёт', d.days], ['Ответственный', person(d.who)], ['Статус', d.status]]));
+      tail(box, d.history);
+    }
+  }
+
+  /* ===== Запись «Простои оборудования сегодня» ===== */
+  function renderDowntime() {
+    var box = card(view('downtime', 3, 'Простои оборудования', 'Простои оборудования сегодня', true));
+    for (var i = 0; i < DOWNTIME.items.length; i++) {
+      var p = DOWNTIME.items[i];
+      box.appendChild(el('h3', null, p.machine));
+      box.appendChild(fields([['Простой сегодня', p.today], ['Причина', p.reason], ['Кто чинит', person(p.who)], ['Сейчас', p.now], ['Связь', p.link]]));
+    }
+    tail(box, DOWNTIME.history);
+  }
+
+  /* ===== Запись показателя (раздел «Показатели» и графики достроит тикет #5) ===== */
+  function renderMetric(m) {
+    var box = card(view(m.id, 3, m.label, m.title));
+    box.appendChild(fields([['Значение', m.value], ['План', m.plan], ['Статус', m.status]]));
+    if (m.debtors) {
+      box.appendChild(el('h3', null, 'Должники'));
+      var rows = [];
+      for (var i = 0; i < m.debtors.length; i++) rows.push([m.debtors[i][0], m.debtors[i][1], 'просрочка ' + m.debtors[i][2]]);
+      rows.push(m.debtTotal);
+      box.appendChild(fields(rows, 'demo-fields--money'));
+    }
+    tail(box, [m.history]);
+  }
+
+  renderTasks();
+  renderDocs();
+  renderDowntime();
+  for (var k = 0; k < METRICS.length; k++) renderMetric(METRICS[k]);
+
+  /* ===== Навигация демо: путь хранится только в памяти ===== */
+  var path = ['home'];
   var views = scroll.querySelectorAll('.demo-view');
   var step = document.getElementById('demo-step');
   var nav = document.getElementById('demo-nav');
-  var final = document.querySelector('.demo-final');
 
   /* 1 нажатие, 2–4 нажатия, 5+ нажатий (11–14 нажатий) */
   function plural(n, one, few, many) {
@@ -321,9 +507,13 @@ button .pill { cursor: inherit; }
     step.querySelector('span').textContent = cur.getAttribute('data-step');
     step.querySelector('b').textContent = cur.getAttribute('data-label');
     nav.classList.toggle('demo-nav--off', id === 'home');
-    var n = path.length - 1;
-    final.querySelector('[data-count]').textContent = n;
-    final.querySelector('[data-word]').textContent = plural(n, 'нажатие', 'нажатия', 'нажатий');
+    /* Финал текущего экрана: с плитки сразу в запись — 1 нажатие, через раздел — 2 */
+    var final = cur.querySelector('.demo-final');
+    if (final) {
+      var n = path.length - 1;
+      final.querySelector('[data-count]').textContent = n;
+      final.querySelector('[data-word]').textContent = plural(n, 'нажатие', 'нажатия', 'нажатий');
+    }
     scroll.scrollTop = 0;
     cur.querySelector('h2').focus({ preventScroll: true });
   }
