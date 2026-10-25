@@ -231,6 +231,25 @@ button { font: inherit; color: inherit; margin: 0; }
 .demo-final { margin: 0; padding-top: var(--sp-3); border-top: 1px solid var(--c-border); font-size: var(--fs-sm); font-weight: var(--fw-semibold); }
 .demo-tg { display: inline-flex; align-items: center; gap: var(--sp-2); min-height: 44px; color: var(--c-accent); font-size: var(--fs-sm); font-weight: var(--fw-semibold); text-decoration: none; }
 .demo-tg svg { width: 20px; height: 20px; flex: 0 0 auto; }
+/* Имитация связи: кнопки в записи, экраны чата и вызова */
+.demo-acts { display: flex; gap: var(--sp-2); margin: 0 0 var(--sp-3); }
+.demo-acts .demo-navbtn { flex: 1 1 0; justify-content: center; padding: 0 var(--sp-3); }
+.demo-chat { display: flex; flex-direction: column; gap: var(--sp-2); padding: var(--sp-3); }
+.demo-chat__hint { margin: 0; color: var(--c-muted); }
+.demo-msg { max-width: 85%; margin: 0; padding: var(--sp-2) var(--sp-3); border-radius: var(--r-md); font-size: var(--fs-sm); line-height: var(--lh-snug); }
+.demo-msg--me { align-self: flex-end; background: var(--c-accent-50); border: 1px solid var(--c-accent-200); }
+.demo-msg--them { align-self: flex-start; background: var(--c-surface-soft); border: 1px solid var(--c-border); }
+.demo-msg:focus { outline: none; }
+.demo-chat__sent { align-self: flex-end; margin: calc(-1 * var(--sp-1)) 0 0; color: var(--c-muted); }
+.demo-chat [hidden] { display: none; }
+.demo-send, .demo-end { align-self: flex-end; min-height: 44px; padding: 0 var(--sp-5); border: 0; border-radius: var(--r-pill); color: var(--c-on-accent); font-size: var(--fs-sm); font-weight: var(--fw-semibold); }
+.demo-send { background: var(--c-accent); }
+.demo-call { display: flex; flex-direction: column; align-items: center; gap: var(--sp-2); padding: var(--sp-5) var(--sp-3); text-align: center; }
+.demo-call__icon { display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; border-radius: 50%; background: var(--c-accent-50); color: var(--c-accent); }
+.demo-call__icon svg { width: 28px; height: 28px; }
+.demo-call__state { margin: 0; font-size: var(--fs-body); font-weight: var(--fw-bold); }
+.demo-call__who { margin: 0 0 var(--sp-2); color: var(--c-muted); font-size: var(--fs-sm); }
+.demo-end { align-self: center; background: var(--st-red); }
 
 /* ===== Состояния при наведении и фокусе (единые, см. docs/design-system.md) ===== */
 a, button { cursor: pointer; }
@@ -242,6 +261,7 @@ button .pill { cursor: inherit; }
 .demo-row:focus-visible { background: var(--c-accent-50); box-shadow: calc(-1 * var(--sp-3)) 0 0 var(--c-accent-50), var(--sp-3) 0 0 var(--c-accent-50); }
 .demo-tg:focus-visible { color: var(--c-accent-hover); text-decoration: underline; }
 .demo-who:focus-visible { color: var(--c-accent-hover); }
+.demo-send:focus-visible { background: var(--c-accent-hover); }
 @media (prefers-reduced-motion: no-preference) {
   .demo-navbtn, .demo-link, .demo-row, .demo-tg, .demo-who, .mock-tile { transition: background-color var(--t-hover), border-color var(--t-hover), box-shadow var(--t-hover), color var(--t-hover); }
   .demo-view:not([hidden]) { animation: demo-fade 160ms ease; }
@@ -254,6 +274,7 @@ button .pill { cursor: inherit; }
   .demo-row:hover { background: var(--c-accent-50); box-shadow: calc(-1 * var(--sp-3)) 0 0 var(--c-accent-50), var(--sp-3) 0 0 var(--c-accent-50); }
   .demo-tg:hover { color: var(--c-accent-hover); text-decoration: underline; }
   .demo-who:hover { color: var(--c-accent-hover); }
+  .demo-send:hover { background: var(--c-accent-hover); }
 }
 
 /* ===== Печать: только главный экран, чёрный текст на белом ===== */
@@ -444,9 +465,30 @@ button .pill { cursor: inherit; }
   ];
   var ASK_HINT = 'В демо есть вопросы только из списка. Выберите один из них';
 
+  /* Чат «Написать»: [сообщение директора, ответ сотрудника] по задачам и по сотрудникам */
+  var CHAT = {
+    t1: ['Линия 2 стоит третий день. Когда будет запчасть?', 'Поставщик обещал привезти завтра до обеда. Поставим за 2 часа, вечером линия заработает.'],
+    t2: ['Что с фасадами на Садовую? Срок прошёл.', 'Ждём плиту нужного цвета. Как придёт, раскроим за день.'],
+    t3: ['Шкаф на Вишнёвую: когда закончите присадку?', 'Осталось 3 корпуса. Закончим завтра к вечеру.'],
+    t4: ['Замер на Луговой висит 4 дня. Что с клиентом?', 'Клиент в отъезде. Сегодня созвонюсь и назначу день.'],
+    t5: ['Расчёт на офисные шкафы клиент ждёт. Когда отправишь?', 'Как только снабжение даст цены на фурнитуру. Сегодня потороплю.'],
+    t6: ['Кромка и фурнитура: почему до сих пор не заказаны?', 'Счёт у бухгалтерии на оплате. После оплаты поставщик отгрузит за 2 дня.'],
+    t7: ['Кухня на Лесной не закончена. Что нужно?', 'Две петли. Завтра заберу со склада и закончу до обеда.'],
+    t8: ['Шкаф на Речной успеваете к сроку?', 'Да, сегодня начали, послезавтра сдаём.'],
+    t9: ['Сверка склада стоит 4 дня. Что мешает?', 'Был занят счетами для поставщика. Завтра закончу оставшиеся стеллажи.'],
+    s1: ['У тебя 3 просрочки. Что из них закроешь первым?', 'Первым линию 2: завтра будет запчасть. Потом фасады и присадку, к пятнице всё сдадим.'],
+    s2: ['По тебе 2 просрочки: замер и расчёт. Какой план?', 'Замер назначу сегодня, расчёт отправлю клиенту, как только будут цены на фурнитуру.'],
+    s3: ['Почему счёт за фурнитуру висит 4 дня?', 'Ждала исправленный счёт. Получила вчера, оплачу сегодня до обеда.'],
+    s4: ['Договор на доставку ждёт твоих документов 5 дней. Когда?', 'Тарифы и доверенность передам юристу завтра утром.'],
+    s5: ['Как дела с Лесной и Речной?', 'Лесную закончим завтра до обеда, Речная идёт по плану.'],
+    s6: ['Два договора ждут твоей подписи. Когда посмотришь?', 'Договор на гардеробную сегодня, договор с поставщиком плит завтра.']
+  };
+
   /* ===== Сборка экранов: только createElement и textContent ===== */
   var scroll = document.getElementById('demo-scroll');
-  var TG_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M21.5 3.2 2.6 10.5c-.9.4-.9 1.2 0 1.5l4.8 1.5 1.9 5.6c.2.6.9.8 1.4.4l2.6-2.2 4.6 3.4c.6.4 1.3.1 1.5-.6l3.2-15.2c.2-.9-.5-1.4-1.1-1.7zM8.6 13l9.3-5.7-7.2 6.9-.3 3z"/></svg>';
+  var CHAT_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/></svg>';
+  var CALL_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>';
+  var TG_ICON ='<svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M21.5 3.2 2.6 10.5c-.9.4-.9 1.2 0 1.5l4.8 1.5 1.9 5.6c.2.6.9.8 1.4.4l2.6-2.2 4.6 3.4c.6.4 1.3.1 1.5-.6l3.2-15.2c.2-.9-.5-1.4-1.1-1.7zM8.6 13l9.3-5.7-7.2 6.9-.3 3z"/></svg>';
 
   function el(tag, cls, text) {
     var n = document.createElement(tag);
@@ -534,6 +576,65 @@ button .pill { cursor: inherit; }
     box.appendChild(a);
   }
 
+  /* ===== Имитация связи: «Написать» и «Позвонить» =====
+     Экраны чата и вызова живут под записью: тот же шаг и подпись, «Назад» ведёт в запись.
+     Ссылок tg:// и tel: нет, ничего не отправляется. */
+  function demoPill(screen) { var p = el('p', 'demo-later'); p.appendChild(el('span', 'pill pill--muted', 'демо')); screen.appendChild(p); }
+
+  /* Кнопки в записи и экраны чата и вызова для неё; id — запись, key — сотрудник */
+  function contact(box, id, label, key) {
+    var acts = box.appendChild(el('div', 'demo-acts'));
+    var write = acts.appendChild(el('button', 'demo-navbtn'));
+    write.type = 'button';
+    write.setAttribute('data-go', id + '-chat');
+    write.innerHTML = CHAT_ICON;
+    write.appendChild(document.createTextNode('Написать'));
+    var call = acts.appendChild(el('button', 'demo-navbtn'));
+    call.type = 'button';
+    call.setAttribute('data-go', id + '-call');
+    call.innerHTML = CALL_ICON;
+    call.appendChild(document.createTextNode('Позвонить'));
+
+    /* Чат: готовое сообщение, «Отправить» → «Отправлено (демо)» и ответ */
+    var s = view(id + '-chat', 3, label, 'Чат: ' + person(key));
+    demoPill(s);
+    var c = s.appendChild(el('div', 'mock-list demo-chat'));
+    c.appendChild(el('p', 'demo-chat__hint', 'Сообщение готово заранее, в демо его не изменить'));
+    c.appendChild(el('p', 'demo-msg demo-msg--me', CHAT[id][0]));
+    var sent = c.appendChild(el('p', 'demo-chat__sent', 'Отправлено (демо)'));
+    var reply = c.appendChild(el('p', 'demo-msg demo-msg--them', CHAT[id][1]));
+    reply.tabIndex = -1;
+    sent.hidden = reply.hidden = true;
+    var send = c.appendChild(el('button', 'demo-send', 'Отправить'));
+    send.type = 'button';
+    send.setAttribute('data-send', '');
+
+    /* Вызов: само по времени ничего не происходит, «Завершить» возвращает в запись */
+    var v = view(id + '-call', 3, label, 'Звонок: ' + person(key));
+    demoPill(v);
+    var w = v.appendChild(el('div', 'mock-list demo-call'));
+    w.appendChild(el('span', 'demo-call__icon')).innerHTML = CALL_ICON;
+    w.appendChild(el('p', 'demo-call__state', 'Идёт вызов…'));
+    w.appendChild(el('p', 'demo-call__who', person(key)));
+    var end = w.appendChild(el('button', 'demo-end', 'Завершить'));
+    end.type = 'button';
+    end.setAttribute('data-back', '');
+  }
+
+  /* Чат при каждом открытии снова с неотправленным сообщением */
+  function resetChat(c) {
+    c.querySelector('.demo-chat__sent').hidden = true;
+    c.querySelector('.demo-msg--them').hidden = true;
+    c.querySelector('[data-send]').hidden = false;
+  }
+  function sendChat(c) {
+    c.querySelector('.demo-chat__sent').hidden = false;
+    c.querySelector('[data-send]').hidden = true;
+    var reply = c.querySelector('.demo-msg--them');
+    reply.hidden = false;
+    reply.focus();
+  }
+
   /* ===== Раздел «Задачи и статусы» и записи задач ===== */
   function renderTasks() {
     var list = card(view('tasks', 2, 'Задачи и статусы', 'Задачи и статусы'));
@@ -542,6 +643,7 @@ button .pill { cursor: inherit; }
       list.appendChild(row(t.id, t.title, STAFF[t.who].name + ' · ' + t.due, t.st, t.pill));
       var box = card(view(t.id, 3, t.label, t.title));
       box.appendChild(fields([['Ответственный', who(t.who)], ['Срок', t.due], ['Статус', t.status]]));
+      contact(box, t.id, t.label, t.who);
       tail(box, t.history);
     }
   }
@@ -598,6 +700,7 @@ button .pill { cursor: inherit; }
 
       /* Срез: просрочено (задачи, затем документы), остальные задачи, остальные документы */
       var box = card(view(key, 3, p.name, person(key)));
+      contact(box, key, p.name, key);
       if (n) {
         box.appendChild(el('h3', null, 'Просрочено'));
         for (var i = 0; i < redT.length; i++) box.appendChild(taskRow(redT[i]));
@@ -724,6 +827,8 @@ button .pill { cursor: inherit; }
       final.querySelector('[data-count]').textContent = n;
       final.querySelector('[data-word]').textContent = plural(n, 'нажатие', 'нажатия', 'нажатий');
     }
+    var chat = cur.querySelector('.demo-chat');
+    if (chat) resetChat(chat);
     /* При любом переходе список «Спросить» закрыт, поле пустое */
     closeAsk(true);
     scroll.scrollTop = 0;
@@ -849,7 +954,9 @@ button .pill { cursor: inherit; }
   document.addEventListener('click', function (e) {
     /* Ссылки на # («Написать в Telegram») иначе создают запись в истории и сбрасывают демо */
     if (e.target.closest('a[href="#"]')) { e.preventDefault(); return; }
-    var t = e.target.closest('[data-go], [data-back], [data-root]');
+    /* «Отправить» в чате: путь и история не меняются */
+    if (e.target.closest('[data-send]')) { sendChat(e.target.closest('.demo-chat')); return; }
+    var t =e.target.closest('[data-go], [data-back], [data-root]');
     if (!t) return;
     if (t.hasAttribute('data-go')) {
       path.push(t.getAttribute('data-go'));
