@@ -63,6 +63,14 @@
   --sh-sm: 0 1px 2px rgba(16, 24, 40, .06);
   --sh-md: 0 8px 24px rgba(29, 78, 216, .08);
   --sh-lg: 0 18px 30px rgba(29, 78, 216, .18);
+  /* Объём: уровни «высоты» (слоистые тени) и подсветка верхней грани, значения как в index.html */
+  --hl: inset 0 1px 0 rgba(255, 255, 255, .9);
+  --sh-0: 0 1px 1px rgba(16, 24, 40, .04);
+  --sh-1: 0 1px 2px rgba(16, 24, 40, .05), 0 6px 14px -8px rgba(29, 78, 216, .14);
+  --sh-2: 0 1px 2px rgba(16, 24, 40, .06), 0 10px 20px -10px rgba(29, 78, 216, .22), 0 22px 40px -22px rgba(29, 78, 216, .2);
+  --sh-3: 0 2px 4px rgba(29, 78, 216, .16), 0 24px 44px -16px rgba(29, 78, 216, .5), 0 50px 80px -34px rgba(26, 34, 48, .32);
+  --btn-sh: inset 0 1px 0 rgba(255, 255, 255, .2), 0 6px 14px -6px rgba(29, 78, 216, .5);
+  --btn-sh-h: inset 0 1px 0 rgba(255, 255, 255, .2), var(--sh-md);
 
   /* Фокус */
   --focus-width: 3px;
@@ -119,7 +127,8 @@ button { font: inherit; color: inherit; margin: 0; }
   body { background: var(--c-tint); }
   .demo-page { height: auto; min-height: 100vh; min-height: 100dvh; align-items: center; justify-content: center; gap: var(--sp-4); padding: var(--sp-5) var(--sp-4); }
   .demo-note { padding: 0; }
-  .demo-device { flex: 0 0 auto; width: 360px; height: max(560px, min(760px, calc(100vh - 104px))); height: max(560px, min(760px, calc(100dvh - 104px))); padding: 10px; background: var(--c-text); border-radius: 40px; box-shadow: var(--sh-lg); }
+  .demo-device { position: relative; flex: 0 0 auto; width: 360px; height: max(560px, min(760px, calc(100vh - 104px))); height: max(560px, min(760px, calc(100dvh - 104px))); padding: 10px; background: var(--c-text); border-radius: 40px; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .14), inset 0 2px 1px rgba(255, 255, 255, .12), 0 48px 70px -28px rgba(26, 34, 48, .45), 0 30px 80px -20px rgba(29, 78, 216, .38); }
+  .demo-device::after { content: ""; position: absolute; right: -3px; top: 24%; width: 3px; height: 56px; border-radius: 0 3px 3px 0; background: var(--c-text); }
   .demo-screen { overflow: hidden; padding: var(--sp-2) 0; border-radius: 32px; }
   .demo-head { padding: 0 var(--sp-4) var(--sp-3); }
   .demo-scroll { padding: var(--sp-1) var(--sp-4) var(--sp-3); }
@@ -251,6 +260,16 @@ button { font: inherit; color: inherit; margin: 0; }
 .demo-call__who { margin: 0 0 var(--sp-2); color: var(--c-muted); font-size: var(--fs-sm); }
 .demo-end { align-self: center; background: var(--st-red); }
 
+/* ===== Объём (как в index.html): подсветка верха, слоистые тени, блик на кнопках ===== */
+.mock-input, .mock-tile, .mock-list, .demo-link { box-shadow: var(--hl), var(--sh-0), 0 4px 10px -6px rgba(29, 78, 216, .18); }
+.mock-btn { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25), 0 6px 12px -4px rgba(29, 78, 216, .55); }
+.demo-send { box-shadow: var(--btn-sh); }
+.demo-end { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .2), 0 6px 14px -6px rgba(26, 34, 48, .5); }
+.demo-navbtn { box-shadow: var(--hl), 0 4px 10px -6px rgba(29, 78, 216, .18); }
+.demo-msg { box-shadow: var(--hl), var(--sh-0); }
+/* Иконка вызова: как .icon-tile (градиент, блик, тень), форма остаётся круглой */
+.demo-call__icon { background: linear-gradient(160deg, var(--c-surface) 0%, var(--c-accent-100) 100%); box-shadow: inset 0 1px 0 #fff, 0 0 0 1px var(--c-accent-100), 0 1px 2px rgba(29, 78, 216, .14), 0 5px 10px -4px rgba(29, 78, 216, .28); }
+
 /* ===== Состояния при наведении и фокусе (единые, см. docs/design-system.md) ===== */
 a, button { cursor: pointer; }
 .demo-view h2, .pill { cursor: default; }
@@ -261,9 +280,11 @@ button .pill { cursor: inherit; }
 .demo-row:focus-visible { background: var(--c-accent-50); box-shadow: calc(-1 * var(--sp-3)) 0 0 var(--c-accent-50), var(--sp-3) 0 0 var(--c-accent-50); }
 .demo-tg:focus-visible { color: var(--c-accent-hover); text-decoration: underline; }
 .demo-who:focus-visible { color: var(--c-accent-hover); }
-.demo-send:focus-visible { background: var(--c-accent-hover); }
+.demo-send:focus-visible { background: var(--c-accent-hover); box-shadow: var(--btn-sh-h); }
+.mock-btn:focus-visible { background: var(--c-accent-hover); box-shadow: var(--btn-sh-h); }
+.demo-navbtn:focus-visible { box-shadow: var(--hl), var(--sh-1); }
 @media (prefers-reduced-motion: no-preference) {
-  .demo-navbtn, .demo-link, .demo-row, .demo-tg, .demo-who, .mock-tile { transition: background-color var(--t-hover), border-color var(--t-hover), box-shadow var(--t-hover), color var(--t-hover); }
+  .demo-navbtn, .demo-link, .demo-row, .demo-tg, .demo-who, .mock-tile, .mock-btn, .demo-send { transition: background-color var(--t-hover), border-color var(--t-hover), box-shadow var(--t-hover), color var(--t-hover), transform var(--t-hover); }
   .demo-view:not([hidden]) { animation: demo-fade 160ms ease; }
   @keyframes demo-fade { from { opacity: 0; } to { opacity: 1; } }
 }
@@ -274,7 +295,13 @@ button .pill { cursor: inherit; }
   .demo-row:hover { background: var(--c-accent-50); box-shadow: calc(-1 * var(--sp-3)) 0 0 var(--c-accent-50), var(--sp-3) 0 0 var(--c-accent-50); }
   .demo-tg:hover { color: var(--c-accent-hover); text-decoration: underline; }
   .demo-who:hover { color: var(--c-accent-hover); }
-  .demo-send:hover { background: var(--c-accent-hover); }
+  .demo-send:hover { background: var(--c-accent-hover); box-shadow: var(--btn-sh-h); }
+  .mock-btn:hover { background: var(--c-accent-hover); box-shadow: var(--btn-sh-h); }
+  .demo-navbtn:hover { box-shadow: var(--hl), var(--sh-1); }
+}
+/* Подъём кнопок на 2px, как у .btn в index.html: только мышь и без reduced-motion */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .demo-navbtn:hover, .demo-send:hover, .mock-btn:hover { transform: translateY(-2px); }
 }
 
 /* ===== Печать: только главный экран, чёрный текст на белом ===== */
@@ -284,6 +311,7 @@ button .pill { cursor: inherit; }
   body *:not(svg):not(svg *) { color: #000 !important; }
   .demo-page { display: block; height: auto; min-height: 0; padding: 0; }
   .demo-device { width: auto; height: auto !important; padding: 0; border-radius: 0; }
+  .demo-device::after { display: none !important; }
   .demo-screen, .demo-scroll { overflow: visible; }
   .mock-status, .mock-home, .mock-step, .demo-nav, .demo-view, .demo-ask { display: none !important; }
   .demo-view[data-screen="home"] { display: block !important; }
