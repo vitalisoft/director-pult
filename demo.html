@@ -348,23 +348,25 @@ button .pill { cursor: inherit; }
           <p class="demo-ask__hint" role="status"></p>
         </div>
         <div class="mock-tiles">
-          <button type="button" class="mock-tile" data-go="tasks"><span class="mock-num st-red">7</span><span class="mock-lbl">Заявки: просрочено</span></button>
+          <button type="button" class="mock-tile" data-go="leads"><span class="mock-num st-red">2</span><span class="mock-lbl">Заявки клиентов: без ответа</span></button>
+          <button type="button" class="mock-tile" data-go="tasks"><span class="mock-num st-red">7</span><span class="mock-lbl">Задачи цеха: просрочено</span></button>
           <button type="button" class="mock-tile" data-go="docs"><span class="mock-num st-amber">3</span><span class="mock-lbl">Согласования: зависли &gt; 2 дней</span></button>
-          <button type="button" class="mock-tile" data-go="downtime"><span class="mock-num st-amber">2</span><span class="mock-lbl">Простои оборудования сегодня</span><span class="pill pill--muted">подключим позже</span></button>
           <button type="button" class="mock-tile" data-go="m1"><span class="mock-num st-green">+4%</span><span class="mock-lbl">Выручка к плану за неделю</span></button>
         </div>
         <div class="mock-list">
           <h3>Главное за сегодня</h3>
-          <button type="button" class="mock-row demo-row" data-go="t1"><span>Заявка №418: простой линии 2, ждём запчасть</span><span class="pill pill--red">3 дня</span></button>
+          <button type="button" class="mock-row demo-row" data-go="l1"><span>Заявка с сайта: кухня, ул. Цветочная — нет ответа клиенту</span><span class="pill pill--red">15 ч</span></button>
           <button type="button" class="mock-row demo-row" data-go="d1"><span>Договор с поставщиком ждёт подписи юриста</span><span class="pill pill--amber">2 дня</span></button>
           <button type="button" class="mock-row demo-row" data-go="m7"><span>Дебиторка: 3 клиента просрочили оплату</span><span class="pill pill--amber">неделя</span></button>
         </div>
         <div class="demo-group">
           <h3>Разделы</h3>
+          <button type="button" class="demo-link" data-go="leads"><span>Заявки клиентов</span><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></button>
           <button type="button" class="demo-link" data-go="metrics"><span>Показатели</span><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></button>
           <button type="button" class="demo-link" data-go="tasks"><span>Задачи и статусы</span><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></button>
           <button type="button" class="demo-link" data-go="docs"><span>Согласования документов</span><span class="demo-link__end"><span class="pill pill--muted">подключим позже</span><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></span></button>
           <button type="button" class="demo-link" data-go="staff"><span>Сотрудники</span><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></button>
+          <button type="button" class="demo-link" data-go="downtime"><span>Простои оборудования</span><span class="demo-link__end"><span class="pill pill--muted">подключим позже</span><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></span></button>
         </div>
       </section>
       <!-- Разделы и записи строит скрипт из блока данных ниже -->
@@ -384,6 +386,29 @@ button .pill { cursor: inherit; }
     s5: { name: 'Попов', role: 'бригадир монтажа' },
     s6: { name: 'Соколова', role: 'юрист' }
   };
+
+  /* Заявки клиентов (правка 2026-11-07): входящие обращения из разных каналов.
+     st: red — клиенту не ответили (считается просрочкой), amber — предложение не отправлено или клиенту не напомнили, green — в работе */
+  var LEADS = [
+    { id: 'l1', code: 'К-1', label: 'Кухня, ул. Цветочная', title: 'Заявка с сайта: угловая кухня, ул. Цветочная', channel: 'форма на сайте', came: 'вчера, 19:40',
+      want: 'угловая кухня 3,2 м, фасады МДФ, нужен замер и расчёт', sum: 'около 6 500 руб.', who: 's2', st: 'red', pill: '15 ч', status: 'клиенту не ответили 15 часов',
+      history: ['вчера 19:40 — заявка пришла с формы на сайте', 'вчера 19:41 — ассистент разобрал заявку: угловая кухня 3,2 м, фасады МДФ, нужен замер', 'вчера 19:41 — назначен Иванов, уведомление отправлено', 'сегодня 09:30 — напоминание менеджеру отправлено, клиенту пока не ответили'] },
+    { id: 'l2', code: 'К-2', label: 'Шкаф-купе в прихожую', title: 'Заявка в Telegram: шкаф-купе в прихожую, ул. Солнечная', channel: 'Telegram', came: 'вчера, 21:15',
+      want: 'шкаф-купе 2 м с зеркалом, хочет узнать цену и срок', sum: 'около 2 300 руб.', who: 's2', st: 'red', pill: '13 ч', status: 'клиенту не ответили 13 часов',
+      history: ['вчера 21:15 — сообщение пришло в Telegram', 'вчера 21:16 — ассистент разобрал заявку: шкаф-купе 2 м с зеркалом, нужна цена и срок', 'сегодня 09:30 — напоминание менеджеру отправлено, клиенту пока не ответили'] },
+    { id: 'l3', code: 'К-3', label: 'Мебель в офис на 12 мест', title: 'Заявка на почту: мебель в офис на 12 рабочих мест, ООО «Офис-клиент»', channel: 'почта', came: '2 дня назад',
+      want: '12 столов, 12 тумб, 2 шкафа для документов, срок — до конца месяца', sum: 'около 14 000 руб.', who: 's2', st: 'amber', pill: 'черновик', status: 'предложение готово, но не отправлено',
+      history: ['2 дня назад — письмо пришло на общую почту', '2 дня назад — ассистент разобрал заявку: 12 столов, 12 тумб, 2 шкафа, срок — до конца месяца', 'вчера — черновик предложения готов по прайсу, ждёт проверки менеджера', 'сегодня — напоминание менеджеру отправлено'] },
+    { id: 'l4', code: 'К-4', label: 'Гардеробная, ул. Берёзовая', title: 'Заявка по телефону: гардеробная, ул. Берёзовая', channel: 'телефон', came: '6 дней назад',
+      want: 'гардеробная 2,4 × 1,8 м, открытые полки и штанги', sum: 'около 4 800 руб.', who: 's2', st: 'amber', pill: '4 дня', status: 'предложение отправлено, клиенту не напомнили 4 дня',
+      history: ['6 дней назад — менеджер внёс заявку после звонка клиента', '5 дней назад — черновик предложения готов по прайсу, менеджер проверил', '4 дня назад — предложение отправлено клиенту', 'сегодня — напоминание менеджеру отправлено: клиенту пора написать'] },
+    { id: 'l5', code: 'К-5', label: 'Кухня, ул. Липовая', title: 'Заявка с сайта: прямая кухня, ул. Липовая', channel: 'форма на сайте', came: '3 дня назад',
+      want: 'прямая кухня 2,8 м, столешница под камень', sum: 'около 5 900 руб.', who: 's2', st: 'green', pill: 'в работе', status: 'клиенту ответили, замер назначен',
+      history: ['3 дня назад — заявка пришла с формы на сайте', '3 дня назад — ассистент разобрал заявку: прямая кухня 2,8 м', '3 дня назад — менеджер ответил клиенту через 40 минут', 'завтра — замер'] },
+    { id: 'l6', code: 'К-6', label: 'Тумбы для кафе', title: 'Заявка в Telegram: тумбы под раковины для кафе', channel: 'Telegram', came: 'вчера, 11:05',
+      want: '3 тумбы под раковины, влагостойкий материал', sum: 'около 1 600 руб.', who: 's2', st: 'green', pill: 'в работе', status: 'предложение отправлено, клиент ответил',
+      history: ['вчера 11:05 — сообщение пришло в Telegram', 'вчера 11:06 — ассистент разобрал заявку: 3 тумбы под раковины, влагостойкий материал', 'вчера 14:20 — черновик предложения готов по прайсу, менеджер проверил и отправил', 'сегодня — клиент ответил, уточняет цвет'] }
+  ];
 
   /* Задачи в порядке показа: просроченные, потом зависшая, потом в работе.
      st: red — просрочено, amber — зависло, green — в работе; pill — текст плашки в строке */
@@ -480,6 +505,7 @@ button .pill { cursor: inherit; }
 
   /* «Спросить»: готовые вопросы и экран, куда ведёт каждый */
   var ASK = [
+    { q: 'Каким клиентам не ответили?', go: 'leads' },
     { q: 'Что просрочено у Петрова?', go: 's1' },
     { q: 'Почему стоит линия 2?', go: 't1' },
     { q: 'Какая выручка к плану?', go: 'm1' },
@@ -495,7 +521,13 @@ button .pill { cursor: inherit; }
 
   /* Чат «Написать»: [сообщение директора, ответ сотрудника] по задачам и по сотрудникам */
   var CHAT = {
-    t1: ['Линия 2 стоит третий день. Когда будет запчасть?', 'Поставщик обещал привезти завтра до обеда. Поставим за 2 часа, вечером линия заработает.'],
+    l1: ['Клиент с Цветочной ждёт ответа с вечера. Когда позвонишь?', 'Звоню сейчас, договорюсь о замере на эту неделю.'],
+    l2: ['Шкаф-купе на Солнечную: клиенту никто не ответил. Что с ним?', 'Напишу в течение часа: цена по прайсу и срок 3 недели.'],
+    l3: ['Предложение на офисную мебель готово со вчера. Почему не ушло?', 'Проверяю цены на тумбы. Отправлю сегодня до обеда.'],
+    l4: ['По гардеробной на Берёзовой клиент молчит 4 дня. Напомнишь?', 'Да, сегодня позвоню и спрошу, что решили.'],
+    l5: ['Замер на Липовой завтра в силе?', 'Да, в 10:00, клиент подтвердил.'],
+    l6: ['Кафе уточняет цвет тумб. Успеем к их сроку?', 'Да, цвет есть на складе, срок 2 недели.'],
+    t1:['Линия 2 стоит третий день. Когда будет запчасть?', 'Поставщик обещал привезти завтра до обеда. Поставим за 2 часа, вечером линия заработает.'],
     t2: ['Что с фасадами на Садовую? Срок прошёл.', 'Ждём плиту нужного цвета. Как придёт, раскроим за день.'],
     t3: ['Шкаф на Вишнёвую: когда закончите присадку?', 'Осталось 3 корпуса. Закончим завтра к вечеру.'],
     t4: ['Замер на Луговой висит 4 дня. Что с клиентом?', 'Клиент в отъезде. Сегодня созвонюсь и назначу день.'],
@@ -505,7 +537,7 @@ button .pill { cursor: inherit; }
     t8: ['Шкаф на Речной успеваете к сроку?', 'Да, сегодня начали, послезавтра сдаём.'],
     t9: ['Сверка склада стоит 4 дня. Что мешает?', 'Был занят счетами для поставщика. Завтра закончу оставшиеся стеллажи.'],
     s1: ['У тебя 3 просрочки. Что из них закроешь первым?', 'Первым линию 2: завтра будет запчасть. Потом фасады и присадку, к пятнице всё сдадим.'],
-    s2: ['По тебе 2 просрочки: замер и расчёт. Какой план?', 'Замер назначу сегодня, расчёт отправлю клиенту, как только будут цены на фурнитуру.'],
+    s2: ['По тебе 4 просрочки: двум клиентам не ответили, плюс замер и расчёт. Какой план?', 'Клиентам отвечу в течение часа. Замер назначу сегодня, расчёт отправлю, как только будут цены на фурнитуру.'],
     s3: ['Почему счёт за фурнитуру висит 4 дня?', 'Ждала исправленный счёт. Получила вчера, оплачу сегодня до обеда.'],
     s4: ['Договор на доставку ждёт твоих документов 5 дней. Когда?', 'Тарифы и доверенность передам юристу завтра утром.'],
     s5: ['Как дела с Лесной и Речной?', 'Лесную закончим завтра до обеда, Речная идёт по плану.'],
@@ -667,6 +699,19 @@ button .pill { cursor: inherit; }
     reply.focus();
   }
 
+  /* ===== Раздел «Заявки клиентов» и записи заявок ===== */
+  function renderLeads() {
+    var list = card(view('leads', 2, 'Заявки клиентов', 'Заявки клиентов'));
+    for (var i = 0; i < LEADS.length; i++) {
+      var l = LEADS[i];
+      list.appendChild(row(l.id, l.title, l.channel + ' · ' + STAFF[l.who].name, l.st, l.pill));
+      var box = card(view(l.id, 3, l.label, l.title));
+      box.appendChild(fields([['Канал', l.channel], ['Пришла', l.came], ['Что хочет клиент', l.want], ['Ориентировочно', l.sum], ['Ответственный', who(l.who)], ['Статус', l.status]]));
+      contact(box, l.id, l.label, l.who);
+      tail(box, l.history);
+    }
+  }
+
   /* ===== Раздел «Задачи и статусы» и записи задач ===== */
   function renderTasks() {
     var list = card(view('tasks', 2, 'Задачи и статусы', 'Задачи и статусы'));
@@ -710,6 +755,7 @@ button .pill { cursor: inherit; }
       if (list[i].who === key) (list[i].st === 'red' ? red : other).push(list[i]);
     }
   }
+  function leadRow(l) { return row(l.id, l.title, l.channel + ' · ' + l.status, l.st, l.pill); }
   function taskRow(t) { return row(t.id, t.title, t.due, t.st, t.pill); }
   function docRow(d) { return row(d.id, d.short, 'Ждёт ' + d.wait, d.st, d.days); }
 
@@ -723,21 +769,24 @@ button .pill { cursor: inherit; }
   function renderStaff() {
     var list = card(view('staff', 2, 'Сотрудники', 'Сотрудники'));
     for (var key in STAFF) {
-      var p = STAFF[key], redT = [], otherT = [], redD = [], otherD = [];
+      var p = STAFF[key], redL = [], otherL = [], redT = [], otherT = [], redD = [], otherD = [];
+      split(LEADS, key, redL, otherL);
       split(TASKS, key, redT, otherT);
       split(DOCS, key, redD, otherD);
-      /* Просрочки считаются из данных: красные задачи плюс красные документы */
-      var n = redT.length + redD.length;
+      /* Просрочки считаются из данных: заявки клиентов без ответа, красные задачи и красные документы */
+      var n = redL.length + redT.length + redD.length;
       list.appendChild(row(key, p.name, p.role, n > 0 ? 'red' : 'muted', n + ' ' + plural(n, 'просрочка', 'просрочки', 'просрочек')));
 
-      /* Срез: просрочено (задачи, затем документы), остальные задачи, остальные документы */
+      /* Срез: просрочено (заявки клиентов, задачи, документы), остальные заявки, задачи, документы */
       var box = card(view(key, 3, p.name, person(key)));
       contact(box, key, p.name, key);
       if (n) {
         box.appendChild(el('h3', null, 'Просрочено'));
+        for (var k = 0; k < redL.length; k++) box.appendChild(leadRow(redL[k]));
         for (var i = 0; i < redT.length; i++) box.appendChild(taskRow(redT[i]));
         for (var j = 0; j < redD.length; j++) box.appendChild(docRow(redD[j]));
       }
+      group(box, 'Остальные заявки клиентов', otherL, leadRow);
       group(box, 'Остальные задачи', otherT, taskRow);
       group(box, 'Остальные документы', otherD, docRow);
       /* Истории сотрудника в данных нет: только финал и Telegram */
@@ -825,6 +874,7 @@ button .pill { cursor: inherit; }
     tail(box, [m.history]);
   }
 
+  renderLeads();
   renderMetrics();
   renderTasks();
   renderDocs();
