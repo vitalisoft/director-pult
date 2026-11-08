@@ -266,6 +266,35 @@ a:focus-visible { outline: var(--focus-width) solid var(--c-accent); outline-off
 }
 @media (min-width: 400px) { .phone { padding: 10px; } .mockup { padding: var(--sp-2) var(--sp-4) var(--sp-2); } }
 .demo-cta { position: relative; z-index: 1; margin-top: var(--sp-5); text-align: center; }
+/* «Интерфейс» в один экран: ширина телефона считается от высоты окна, пропорции рамки те же.
+   Высота рамки = (ширина − 20px) × 2,111 + 20px, отсюда ширина = (высота окна − отступы секции − заголовок − кнопка) / 2,111 + 10px.
+   Нижний предел 310px: уже нельзя, иначе текст макета (13px) переносится и рамка вытягивается по содержимому. */
+@media (max-width: 719px) {
+  #preview .mockup-stage { max-width: min(360px, max(310px, calc((100vh - var(--sp-6)) / 2.111 + 10px))); }
+  #preview .mockup-stage { max-width: min(360px, max(310px, calc((100svh - var(--sp-6)) / 2.111 + 10px))); }
+}
+@media (min-width: 720px) {
+  /* --pv-head: место под заголовок секции, когда он стоит над телефоном (720–959px); с 960px заголовок в левой колонке */
+  #preview { --pv-y: var(--sp-7); --pv-head: calc(2 * var(--sp-9) + var(--sp-2)); padding-top: var(--pv-y); padding-bottom: var(--pv-y); }
+  #preview .container { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "head head" "points stage"; column-gap: var(--sp-6); align-items: center; }
+  #preview .preview-grid { display: contents; }
+  #preview .section-head { grid-area: head; margin-bottom: var(--sp-5); }
+  #preview .preview-points { grid-area: points; }
+  #preview .mockup-stage {
+    grid-area: stage; max-width: none; margin: 0;
+    width: clamp(310px, calc((100vh - 2 * var(--pv-y) - var(--pv-head) - var(--sp-6) - var(--sp-7)) / 2.111 + 10px), 360px);
+    width: clamp(310px, calc((100svh - 2 * var(--pv-y) - var(--pv-head) - var(--sp-6) - var(--sp-7)) / 2.111 + 10px), 360px);
+  }
+  #preview .mockup { padding-left: var(--sp-3); padding-right: var(--sp-3); }
+  #preview .demo-cta { margin-top: var(--sp-6); }
+}
+@media (min-width: 720px) and (max-height: 800px) { #preview { --pv-y: var(--sp-5); } }
+@media (min-width: 720px) and (max-height: 740px) { #preview { --pv-y: var(--sp-4); } }
+@media (min-width: 960px) {
+  #preview { --pv-head: 0px; }
+  #preview .container { grid-template-rows: 1fr auto auto 1fr; grid-template-areas: ". stage" "head stage" "points stage" ". stage"; column-gap: var(--sp-8); }
+  #preview .section-head { margin-bottom: var(--sp-6); }
+}
 
 /* ===== Шапка ===== */
 .site-header { padding-top: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--c-border); background: var(--c-bg); }
@@ -717,7 +746,7 @@ a, .btn { cursor: pointer; }
       <p class="eyebrow">Кто мы</p>
       <h2 class="h2">О компании</h2>
       <p class="lead">«Пульт директора»: одна система, где руководитель малого или среднего бизнеса видит работу всей компании не больше чем за три клика.</p>
-      <p>Может просматривать ключевые метрики, статусы по заявкам и задачам и ставить новые голосом или с помощью фото. Согласование документов подключим позже.</p>
+      <p class="lead">Может просматривать ключевые метрики, статусы по заявкам и задачам и ставить новые голосом или с помощью фото. Согласование документов подключим позже.</p>
     </div>
     <div class="about__aside">
       <ul class="card card--raised fact-list">
