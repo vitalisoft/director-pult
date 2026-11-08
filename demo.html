@@ -260,6 +260,33 @@ button { font: inherit; color: inherit; margin: 0; }
 .demo-call__who { margin: 0 0 var(--sp-2); color: var(--c-muted); font-size: var(--fs-sm); }
 .demo-end { align-self: center; background: var(--st-red); }
 
+/* ===== Уведомление «Пульт сам сообщает о проблеме» (правка 2026-11-08) =====
+   Баннер сверху внутри экрана телефона, как push-уведомление. Контейнер-ячейка live-региона всегда в DOM и пуст,
+   пока уведомления нет; сам баннер — кнопка-переход в заявку и крестик. */
+.demo-screen { position: relative; }
+.demo-push { position: absolute; z-index: 2; top: var(--sp-2); left: var(--sp-2); right: var(--sp-2); pointer-events: none; }
+.demo-push__card { display: flex; align-items: flex-start; gap: var(--sp-1); background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--r-lg); box-shadow: var(--hl), var(--sh-3); pointer-events: auto; touch-action: none; transform: translateY(0); opacity: 1; }
+.demo-push__card--off { transform: translateY(calc(-100% - var(--sp-4))); opacity: 0; pointer-events: none; }
+.demo-push__open { flex: 1 1 auto; min-width: 0; display: flex; align-items: flex-start; gap: var(--sp-3); min-height: 44px; padding: var(--sp-3) 0 var(--sp-3) var(--sp-3); background: none; border: 0; border-radius: var(--r-lg); color: var(--c-text); text-align: left; overflow-wrap: anywhere; }
+.demo-push__icon { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: var(--r-sm); background: linear-gradient(160deg, var(--c-surface) 0%, var(--c-accent-100) 100%); box-shadow: inset 0 1px 0 #fff, 0 0 0 1px var(--c-accent-100), 0 1px 2px rgba(29, 78, 216, .14); color: var(--c-accent); }
+.demo-push__icon svg { width: 18px; height: 18px; }
+.demo-push__text { flex: 1 1 auto; min-width: 0; }
+.demo-push__app { display: block; color: var(--c-muted); font-size: var(--fs-xs); line-height: var(--lh-snug); }
+.demo-push__title { display: block; margin-top: 2px; color: var(--st-red); font-size: var(--fs-sm); font-weight: var(--fw-bold); line-height: var(--lh-snug); }
+.demo-push__body { display: block; margin-top: 2px; color: var(--c-text); font-size: var(--fs-xs); line-height: var(--lh-snug); }
+.demo-push__close { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; margin: var(--sp-1); padding: 0; background: none; border: 0; border-radius: 50%; color: var(--c-muted); }
+.demo-push__close svg { width: 18px; height: 18px; }
+.demo-push__open:focus-visible { outline: var(--focus-width) solid var(--c-accent); outline-offset: calc(-1 * var(--focus-width)); background: var(--c-accent-50); }
+.demo-push__close:focus-visible { outline-offset: calc(-1 * var(--focus-width)); background: var(--c-accent-50); color: var(--c-accent-hover); }
+@media (prefers-reduced-motion: no-preference) {
+  .demo-push__card { transition: transform 240ms ease, opacity 240ms ease; }
+  .demo-push__card--drag { transition: none; }
+}
+@media (hover: hover) and (pointer: fine) {
+  .demo-push__open:hover { background: var(--c-accent-50); }
+  .demo-push__close:hover { background: var(--c-accent-50); color: var(--c-accent-hover); }
+}
+
 /* ===== Объём (как в index.html): подсветка верха, слоистые тени, блик на кнопках ===== */
 .mock-input, .mock-tile, .mock-list, .demo-link { box-shadow: var(--hl), var(--sh-0), 0 4px 10px -6px rgba(29, 78, 216, .18); }
 .mock-btn { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25), 0 6px 12px -4px rgba(29, 78, 216, .55); }
@@ -313,7 +340,7 @@ button .pill { cursor: inherit; }
   .demo-device { width: auto; height: auto !important; padding: 0; border-radius: 0; }
   .demo-device::after { display: none !important; }
   .demo-screen, .demo-scroll { overflow: visible; }
-  .mock-status, .mock-home, .mock-step, .demo-nav, .demo-view, .demo-ask { display: none !important; }
+  .mock-status, .mock-home, .mock-step, .demo-nav, .demo-view, .demo-ask, .demo-push { display: none !important; }
   .demo-view[data-screen="home"] { display: block !important; }
   .mock-input, .mock-tile, .mock-list, .mock-row, .demo-link, .pill { background: #fff !important; border-color: #000 !important; }
   .pill, .demo-link { border: 1px solid #000 !important; }
@@ -372,6 +399,8 @@ button .pill { cursor: inherit; }
       <!-- Разделы и записи строит скрипт из блока данных ниже -->
     </div>
     <div class="mock-home" aria-hidden="true"></div>
+    <!-- Уведомление о самой «горящей» заявке: содержимое вставляет скрипт -->
+    <div class="demo-push" id="demo-push" role="status" aria-live="polite"></div>
   </div>
   </div>
 </main>
@@ -902,6 +931,8 @@ button .pill { cursor: inherit; }
     step.querySelector('span').textContent = cur.getAttribute('data-step');
     step.querySelector('b').textContent = cur.getAttribute('data-label');
     nav.classList.toggle('demo-nav--off', id === 'home');
+    /* Ушли с главного экрана: уведомление убираем, а если ещё не показано — больше не показываем */
+    if (id !== 'home') { pushDone = true; hidePush(); }
     /* Финал текущего экрана: с плитки сразу в запись — 1 нажатие, через раздел — 2 */
     var final = cur.querySelector('.demo-final');
     if (final) {
@@ -1050,6 +1081,120 @@ button .pill { cursor: inherit; }
     else if (path.length > 1) history.go(1 - path.length);
     else show();
   });
+
+  /* ===== Уведомление «Пульт сам сообщает о проблеме» (правка 2026-11-08) =====
+     Самая «горящая» заявка: клиенту не ответили (st: red), дольше всех — по часам в плашке («15 ч»).
+     Появляется один раз за загрузку, через 3,5 с после первого показа главного экрана; само уходит через 8 с.
+     Нажатие ведёт прямо в запись заявки через общий обработчик data-go: 1 нажатие от главного экрана. */
+  var PUSH_DELAY = 3500, PUSH_LIFE = 8000, PUSH_OUT = 300;
+  var pushBox = document.getElementById('demo-push');
+  var pushCard = null, pushLife = 0, pushDone = false;
+  var BELL_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg>';
+  var CLOSE_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+
+  function leadHours(l) { var m = /(\d+)\s*ч/.exec(l.pill); return m ? Number(m[1]) : 0; }
+  function hottestLead() {
+    var best = null;
+    for (var i = 0; i < LEADS.length; i++) {
+      if (LEADS[i].st === 'red' && (!best || leadHours(LEADS[i]) > leadHours(best))) best = LEADS[i];
+    }
+    return best;
+  }
+
+  function showPush() {
+    var l = hottestLead();
+    if (pushDone || !l || path.length > 1) { pushDone = true; return; }
+    pushDone = true;
+    var c = el('div', 'demo-push__card demo-push__card--off');
+    var open = c.appendChild(el('button', 'demo-push__open'));
+    open.type = 'button';
+    open.setAttribute('data-go', l.id);
+    open.appendChild(el('span', 'demo-push__icon')).innerHTML = BELL_ICON;
+    var t = open.appendChild(el('span', 'demo-push__text'));
+    t.appendChild(el('span', 'demo-push__app', 'Пульт директора · сейчас'));
+    /* Текст статуса — из данных заявки: «клиенту не ответили 15 часов» */
+    t.appendChild(el('span', 'demo-push__title', l.status.charAt(0).toUpperCase() + l.status.slice(1)));
+    t.appendChild(el('span', 'demo-push__body', l.label + ' · ' + l.channel + ' · ответственный ' + STAFF[l.who].name));
+    var x = c.appendChild(el('button', 'demo-push__close'));
+    x.type = 'button';
+    x.setAttribute('aria-label', 'Закрыть уведомление');
+    x.innerHTML = CLOSE_ICON;
+    x.addEventListener('click', function () { hidePush(); });
+    pushBox.appendChild(c);
+    pushCard = c;
+    swipe(c);
+    /* Пока фокус или мышь на уведомлении, само оно не уходит */
+    c.addEventListener('focusin', stopLife);
+    c.addEventListener('pointerenter', stopLife);
+    c.addEventListener('focusout', function (e) { if (!c.contains(e.relatedTarget)) startLife(); });
+    c.addEventListener('pointerleave', function () { if (!c.contains(document.activeElement)) startLife(); });
+    c.addEventListener('keydown', function (e) { if (e.key === 'Escape') { e.preventDefault(); hidePush(); } });
+    /* Кадр в состоянии «за верхним краем», затем выезд */
+    void c.offsetHeight;
+    c.classList.remove('demo-push__card--off');
+    startLife();
+  }
+  function stopLife() { clearTimeout(pushLife); }
+  function startLife() { stopLife(); pushLife = setTimeout(hidePush, PUSH_LIFE); }
+
+  function hidePush() {
+    var c = pushCard;
+    if (!c) return;
+    pushCard = null;
+    stopLife();
+    /* Фокус был в уведомлении — не теряем его: на заголовок текущего экрана */
+    var hadFocus = c.contains(document.activeElement);
+    c.style.transform = '';
+    c.classList.remove('demo-push__card--drag');
+    c.classList.add('demo-push__card--off');
+    if (hadFocus) {
+      var cur = scroll.querySelector('.demo-view:not([hidden]) h2');
+      if (cur) cur.focus({ preventScroll: true });
+    }
+    setTimeout(function () { if (c.parentNode) c.parentNode.removeChild(c); }, PUSH_OUT);
+  }
+
+  /* Свайп вверх или вбок закрывает; после свайпа нажатие не считается переходом */
+  function swipe(c) {
+    var x0 = 0, y0 = 0, dx = 0, dy = 0, on = false, moved = false;
+    c.addEventListener('pointerdown', function (e) {
+      if (e.target.closest('.demo-push__close')) return;
+      on = true; moved = false; x0 = e.clientX; y0 = e.clientY; dx = dy = 0;
+    });
+    c.addEventListener('pointermove', function (e) {
+      if (!on) return;
+      dx = e.clientX - x0; dy = Math.min(0, e.clientY - y0);
+      if (!moved && (Math.abs(dx) > 8 || dy < -8)) {
+        moved = true;
+        c.classList.add('demo-push__card--drag');
+        try { c.setPointerCapture(e.pointerId); } catch (err) {}
+      }
+      if (moved) c.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+    });
+    function up() {
+      if (!on) return;
+      on = false;
+      if (!moved) return;
+      c.classList.remove('demo-push__card--drag');
+      if (dy < -30 || Math.abs(dx) > 60) hidePush();
+      else c.style.transform = '';
+    }
+    c.addEventListener('pointerup', up);
+    c.addEventListener('pointercancel', up);
+    /* Клик после свайпа гасим до общего обработчика навигации */
+    c.addEventListener('click', function (e) {
+      if (moved) { moved = false; e.preventDefault(); e.stopPropagation(); }
+    });
+  }
+
+  /* Отсчёт от первого показа главного экрана: если вкладка открыта в фоне — с момента, когда её увидели */
+  function armPush() {
+    if (document.hidden) return;
+    document.removeEventListener('visibilitychange', armPush);
+    setTimeout(showPush, PUSH_DELAY);
+  }
+  if (document.hidden) document.addEventListener('visibilitychange', armPush);
+  else armPush();
 })();
 </script>
 </body>
