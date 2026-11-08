@@ -1092,7 +1092,14 @@ button .pill { cursor: inherit; }
   var BELL_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></svg>';
   var CLOSE_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
 
-  function leadHours(l) { var m = /(\d+)\s*ч/.exec(l.pill); return m ? Number(m[1]) : 0; }
+  /* Сколько часов клиенту не отвечают: «15 ч» — часы, «2 дня» / «1 день» / «5 дней» — дни (×24).
+     Без этого заявка со сроком в днях получала 0 часов и проигрывала любой «часовой». */
+  function leadHours(l) {
+    var h = /(\d+)\s*ч/.exec(l.pill);
+    if (h) return Number(h[1]);
+    var d = /(\d+)\s*(дн|день)/.exec(l.pill);
+    return d ? Number(d[1]) * 24 : 0;
+  }
   function hottestLead() {
     var best = null;
     for (var i = 0; i < LEADS.length; i++) {
